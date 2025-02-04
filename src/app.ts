@@ -6,7 +6,7 @@ const envResult = dotenv.config({
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import testRoutes from './routes/testRoutes';
-import menuTestRoutes from './routes/menuTestRoutes';
+import menuTestRoutes from './routes/menuRoutes';
 import { connectToDatabase } from './config/db';
 
 const app: Express = express();
@@ -28,7 +28,7 @@ const PORT = process.env.PORT || 3002;
 if (require.main === module) {
     connectToDatabase()
         .then(() => {
-            console.log('MySQL Connection Successful');
+            //console.log('MySQL Connection Successful');
             app.listen(PORT, () => {
                 console.log(`Server is running on port ${PORT}`);
             });
