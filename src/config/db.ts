@@ -23,4 +23,4 @@ export const connectToDatabase = async (): Promise<void> => {
     }
 };
 
-export { pool as default };
+export default pool;
