@@ -1,6 +1,8 @@
-// src/controllers/menuController.ts
+// /var/www/RestAPI/src/controllers/menuController.ts
 import { Request, Response } from 'express';
 import { MenuItemService } from '../services/menuService';
+import fs from 'fs';
+import path from 'path';
 
 const menuItemService = new MenuItemService();
 

@@ -1,4 +1,5 @@
-// This is your primary model definition for the backend
+// /var/www/RestAPI/src/models/menuItems.ts
+// This is NVRS-TS model definition for the backend
 export interface MenuItem {
     item_id: number;
     item_name: string;

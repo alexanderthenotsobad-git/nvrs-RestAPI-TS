@@ -36,38 +36,38 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectToDatabase = exports.pool = void 0;
-var promise_1 = require("mysql2/promise");
-// Remove dotenv import and config from here since it's handled in app.ts
-// Create the pool with TypeScript types
-exports.pool = (0, promise_1.createPool)({
-    port: Number(process.env.MYSQL_PORT),
-    host: process.env.MYSQL_HOST,
-    database: process.env.MYSQL_DATABASE_NAME,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD
-});
-// Connection test function
-var connectToDatabase = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var connection, error_1;
+exports.getMenuItemImage = void 0;
+var menuService_1 = require("../services/menuService");
+var menuItemService = new menuService_1.MenuItemService();
+var getMenuItemImage = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var imageId, image, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, exports.pool.getConnection()];
+                imageId = parseInt(req.params.imageId, 10);
+                if (isNaN(imageId)) {
+                    res.status(400).json({ message: 'Invalid image ID' });
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, menuItemService.getMenuItemImage(imageId)];
             case 1:
-                connection = _a.sent();
-                console.log("MySQL Connection Successful 🧮️");
-                connection.release();
+                image = _a.sent();
+                if (!image) {
+                    res.status(404).json({ message: 'Image not found' });
+                    return [2 /*return*/];
+                }
+                res.contentType(image.type);
+                res.send(image.data);
                 return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
-                console.log("Database Connection Error");
-                console.error(error_1);
-                throw error_1;
+                res.status(500).json({
+                    message: error_1 instanceof Error ? error_1.message : 'Unknown error'
+                });
+                return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
-exports.connectToDatabase = connectToDatabase;
-exports.default = exports.pool;
+exports.getMenuItemImage = getMenuItemImage;

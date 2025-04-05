@@ -1,4 +1,4 @@
-// src/routes/menuRoutes.ts
+// /var/www/RestAPI/src/routes/menuRoutes.ts
 import express from 'express';
 import { Router } from 'express';
 import { getAllMenuItems, createMenuItem, deleteMenuItem } from '../controllers/menuController';
@@ -7,7 +7,7 @@ const router = Router();
 
 /**
  * @swagger
- * /menu:
+ * /:
  *   get:
  *     tags:
  *       - Menu Items
@@ -25,11 +25,11 @@ const router = Router();
  *       500:
  *         description: Server error
  */
-router.get('/menu', getAllMenuItems);
+router.get('/', getAllMenuItems);
 
 /**
  * @swagger
- * /menu:
+ * /createManuItem:
  *   post:
  *     tags:
  *       - Menu Items
@@ -53,7 +53,7 @@ router.get('/menu', getAllMenuItems);
  *       500:
  *         description: Server error
  */
-router.post('/menu', createMenuItem);
+router.post('/createMenuItem', createMenuItem);
 
 /**
  * @swagger
