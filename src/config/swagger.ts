@@ -1,4 +1,4 @@
-// src/config/swagger.ts
+// /var/www/RestAPI/src/config/swagger.ts
 import swaggerJsdoc from 'swagger-jsdoc';
 
 const options = {
