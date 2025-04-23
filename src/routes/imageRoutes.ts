@@ -5,7 +5,7 @@ import path from 'path';
 import fs from 'fs';
 import { getMenuItemImage, uploadMenuItemImage } from '../controllers/imageController';
 
-const router = express.Router(); // Use this syntax instead of directly importing Router
+const router = express.Router();
 
 // Create uploads directory if it doesn't exist
 const uploadDir = path.join(__dirname, '../../uploads');
@@ -48,15 +48,15 @@ const upload = multer({
  *   get:
  *     tags:
  *       - Images
- *     summary: Get menu item image
- *     description: Retrieves an image by ID
+ *     summary: Get menu item image by image ID
+ *     description: Retrieves an image from the database by its unique image ID
  *     parameters:
  *       - in: path
  *         name: imageId
  *         required: true
  *         schema:
  *           type: integer
- *         description: Image ID
+ *         description: The unique identifier for the image
  *     responses:
  *       200:
  *         description: Image returned successfully
@@ -66,9 +66,9 @@ const upload = multer({
  *               type: string
  *               format: binary
  *       404:
- *         description: Image not found
+ *         description: Image not found in the database
  *       500:
- *         description: Server error
+ *         description: Server error occurred while retrieving the image
  */
 router.get('/:imageId', getMenuItemImage);
 
@@ -78,15 +78,15 @@ router.get('/:imageId', getMenuItemImage);
  *   get:
  *     tags:
  *       - Images
- *     summary: Get menu item image by menu item ID
- *     description: Retrieves the most recent image for a menu item
+ *     summary: Get image by menu item ID
+ *     description: Retrieves the most recent image associated with a specific menu item
  *     parameters:
  *       - in: path
  *         name: menuItemId
  *         required: true
  *         schema:
  *           type: integer
- *         description: Menu Item ID
+ *         description: The ID of the menu item whose image is to be retrieved
  *     responses:
  *       200:
  *         description: Image returned successfully
@@ -96,9 +96,9 @@ router.get('/:imageId', getMenuItemImage);
  *               type: string
  *               format: binary
  *       404:
- *         description: Image not found
+ *         description: No image found for this menu item
  *       500:
- *         description: Server error
+ *         description: Server error occurred while retrieving the image
  */
 router.get('/menu-item/:menuItemId', getMenuItemImage);
 
@@ -109,33 +109,50 @@ router.get('/menu-item/:menuItemId', getMenuItemImage);
  *     tags:
  *       - Images
  *     summary: Upload an image for a menu item
- *     description: Uploads a new image for a specific menu item
+ *     description: Uploads a new image file and associates it with a specific menu item in the database
  *     parameters:
  *       - in: path
  *         name: menuItemId
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID of the menu item
+ *         description: ID of the menu item to associate with the uploaded image
  *     requestBody:
+ *       required: true
  *       content:
  *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - image
  *             properties:
  *               image:
  *                 type: string
  *                 format: binary
- *                 description: Image file to upload
+ *                 description: The image file to upload (JPEG, PNG, GIF, etc.)
  *     responses:
  *       201:
  *         description: Image uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Image uploaded successfully
+ *                 imageId:
+ *                   type: integer
+ *                   example: 42
+ *                 menuItemId:
+ *                   type: integer
+ *                   example: 15
  *       400:
- *         description: Invalid request
+ *         description: Bad request - invalid file or menu item ID
  *       404:
  *         description: Menu item not found
  *       500:
- *         description: Server error
+ *         description: Server error occurred during upload
  */
 router.post('/menu-item/:menuItemId', upload.single('image'), uploadMenuItemImage);
 
@@ -146,33 +163,50 @@ router.post('/menu-item/:menuItemId', upload.single('image'), uploadMenuItemImag
  *     tags:
  *       - Images
  *     summary: Upload an image for a menu item (alternative route)
- *     description: Uploads a new image for a specific menu item
+ *     description: Alternative endpoint for uploading an image file for a menu item. Functionally identical to '/api/images/menu-item/{menuItemId}'
  *     parameters:
  *       - in: path
  *         name: menuItemId
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID of the menu item
+ *         description: ID of the menu item to associate with the uploaded image
  *     requestBody:
+ *       required: true
  *       content:
  *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - image
  *             properties:
  *               image:
  *                 type: string
  *                 format: binary
- *                 description: Image file to upload
+ *                 description: The image file to upload (JPEG, PNG, GIF, etc.)
  *     responses:
  *       201:
  *         description: Image uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Image uploaded successfully
+ *                 imageId:
+ *                   type: integer
+ *                   example: 42
+ *                 menuItemId:
+ *                   type: integer
+ *                   example: 15
  *       400:
- *         description: Invalid request
+ *         description: Bad request - invalid file or menu item ID
  *       404:
  *         description: Menu item not found
  *       500:
- *         description: Server error
+ *         description: Server error occurred during upload
  */
 router.post('/upload/:menuItemId', upload.single('image'), uploadMenuItemImage);
 

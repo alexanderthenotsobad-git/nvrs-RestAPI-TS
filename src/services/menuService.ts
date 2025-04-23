@@ -177,6 +177,56 @@ export class MenuItemService {
         return result.insertId;
     }
 
+    async updateMenuItem(itemId: number, menuItem: Partial<MenuItem>): Promise<number> {
+        try {
+            const { item_name, item_desc, price, item_type } = menuItem;
+
+            // Create an array to store field updates and values
+            const updates: string[] = [];
+            const values: any[] = [];
+
+            // Only add fields that are provided
+            if (item_name !== undefined) {
+                updates.push('item_name = ?');
+                values.push(item_name);
+            }
+
+            if (item_desc !== undefined) {
+                updates.push('item_desc = ?');
+                values.push(item_desc);
+            }
+
+            if (price !== undefined) {
+                updates.push('price = ?');
+                values.push(price);
+            }
+
+            if (item_type !== undefined) {
+                updates.push('item_type = ?');
+                values.push(item_type);
+            }
+
+            // If no fields to update, return 0 (no rows affected)
+            if (updates.length === 0) {
+                return 0;
+            }
+
+            // Add itemId to the values array
+            values.push(itemId);
+
+            const query = `UPDATE menu_items SET ${updates.join(', ')} WHERE item_id = ?`;
+
+            const [result] = await this.pool.query(query, values);
+
+            return (result as any).affectedRows;
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error(`Failed to update menu item: ${error.message}`);
+            }
+            throw new Error('Unknown database error');
+        }
+    }
+
     /**
      * Delete a menu item by name
      * @param {string} item_name - The name of the menu item to delete

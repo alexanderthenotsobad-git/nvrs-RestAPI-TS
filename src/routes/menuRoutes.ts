@@ -1,7 +1,7 @@
 // /var/www/RestAPI/src/routes/menuRoutes.ts
 import express from 'express';
 import { Router } from 'express';
-import { getAllMenuItems, createMenuItem, deleteMenuItem } from '../controllers/menuController';
+import { getAllMenuItems, createMenuItem, deleteMenuItem, updateMenuItem } from '../controllers/menuController';
 
 const router = Router();
 
@@ -29,7 +29,7 @@ router.get('/', getAllMenuItems);
 
 /**
  * @swagger
- * /createManuItem:
+ * /createMenuItem:
  *   post:
  *     tags:
  *       - Menu Items
@@ -54,6 +54,72 @@ router.get('/', getAllMenuItems);
  *         description: Server error
  */
 router.post('/createMenuItem', createMenuItem);
+
+/**
+ * @swagger
+ * /menu/{id}:
+ *   put:
+ *     tags:
+ *       - Menu Items
+ *     summary: Update a menu item
+ *     description: Updates an existing menu item in the database
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Menu item ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               item_name:
+ *                 type: string
+ *                 description: The name of the menu item
+ *               item_desc:
+ *                 type: string
+ *                 description: Description of the menu item
+ *               price:
+ *                 type: number
+ *                 format: decimal
+ *                 description: Price of the menu item
+ *               item_type:
+ *                 type: string
+ *                 description: Type/category of the menu item
+ *             example:
+ *               item_name: "Updated Burger"
+ *               item_desc: "A delicious updated burger with special sauce"
+ *               price: 12.99
+ *               item_type: "Main Course"
+ *     responses:
+ *       200:
+ *         description: Menu item updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Menu item updated successfully"
+ *                 itemId:
+ *                   type: integer
+ *                   example: 1
+ *                 affectedRows:
+ *                   type: integer
+ *                   example: 1
+ *       400:
+ *         description: Invalid input
+ *       404:
+ *         description: Menu item not found
+ *       500:
+ *         description: Server error
+ */
+router.put('/menu/:id', updateMenuItem);
 
 /**
  * @swagger
