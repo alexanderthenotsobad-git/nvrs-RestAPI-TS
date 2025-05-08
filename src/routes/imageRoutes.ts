@@ -3,7 +3,7 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { getMenuItemImage, uploadMenuItemImage } from '../controllers/imageController';
+import { getMenuItemImage, uploadMenuItemImage, deleteMenuItemImages } from '../controllers/imageController';
 
 const router = express.Router();
 
@@ -209,5 +209,44 @@ router.post('/menu-item/:menuItemId', upload.single('image'), uploadMenuItemImag
  *         description: Server error occurred during upload
  */
 router.post('/upload/:menuItemId', upload.single('image'), uploadMenuItemImage);
+
+/**
+ * @swagger
+ * /api/images/menu-item/{menuItemId}:
+ *   delete:
+ *     tags:
+ *       - Images
+ *     summary: Delete all images for a menu item
+ *     description: Removes all images associated with a specific menu item from the database
+ *     parameters:
+ *       - in: path
+ *         name: menuItemId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the menu item whose images should be deleted
+ *     responses:
+ *       200:
+ *         description: Images deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Images deleted successfully
+ *                 deletedCount:
+ *                   type: integer
+ *                   example: 3
+ *                 menuItemId:
+ *                   type: integer
+ *                   example: 56
+ *       400:
+ *         description: Invalid menu item ID
+ *       500:
+ *         description: Server error occurred while deleting images
+ */
+router.delete('/menu-item/:menuItemId', deleteMenuItemImages);
 
 export default router;

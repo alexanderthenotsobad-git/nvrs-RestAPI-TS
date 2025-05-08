@@ -68,6 +68,45 @@ export const getMenuItemImage = async (req: Request, res: Response): Promise<voi
     }
 };
 
+/**
+ * Delete all images associated with a specific menu item
+ * This is used when changing an image to prevent duplicate entries
+ */
+export const deleteMenuItemImages = async (req: Request, res: Response): Promise<void> => {
+    try {
+        // Extract menu item ID from request parameters
+        const menuItemId = parseInt(req.params.menuItemId, 10);
+
+        // Validate menu item ID
+        if (isNaN(menuItemId)) {
+            res.status(400).json({ message: 'Invalid menu item ID' });
+            return;
+        }
+
+        // Get the existing images first (for logging purposes)
+        const existingImages = await menuItemService.getAllImagesForMenuItem(menuItemId);
+
+        if (existingImages.length === 0) {
+            res.json({ message: 'No images found to delete', deletedCount: 0 });
+            return;
+        }
+
+        // Call service to delete all images for this menu item
+        const deletedCount = await menuItemService.deleteImagesForMenuItem(menuItemId);
+
+        res.json({
+            message: 'Images deleted successfully',
+            deletedCount,
+            menuItemId
+        });
+    } catch (error) {
+        console.error('Error deleting menu item images:', error);
+        res.status(500).json({
+            message: error instanceof Error ? error.message : 'Unknown error deleting images'
+        });
+    }
+};
+
 export const uploadMenuItemImage = async (req: Request, res: Response): Promise<void> => {
     try {
         // Extract menuItemId from request parameters

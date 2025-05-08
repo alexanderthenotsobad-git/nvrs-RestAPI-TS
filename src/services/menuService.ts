@@ -81,7 +81,28 @@ export class MenuItemService {
             throw new Error('Failed to retrieve image');
         }
     }
+    /**
+     * Delete all images for a specific menu item
+     * @param {number} menuItemId - The ID of the menu item
+     * @returns {Promise<number>} The number of deleted images
+     * @throws {Error} If database operation fails
+     */
+    async deleteImagesForMenuItem(menuItemId: number): Promise<number> {
+        try {
+            const [result] = await this.pool.query<ResultSetHeader>(
+                'DELETE FROM menu_item_images WHERE menu_item_id = ?',
+                [menuItemId]
+            );
 
+            return result.affectedRows;
+        } catch (error) {
+            console.error('Error deleting images for menu item:', error);
+            if (error instanceof Error) {
+                throw new Error(`Failed to delete images: ${error.message}`);
+            }
+            throw new Error('Unknown database error');
+        }
+    }
     /**
      * Gets the most recent image ID for a menu item
      * @param {number} menuItemId - The ID of the menu item
@@ -241,3 +262,4 @@ export class MenuItemService {
         return result.affectedRows;
     }
 }
+
