@@ -3,7 +3,7 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { getMenuItemImage, uploadMenuItemImage, deleteMenuItemImages } from '../controllers/imageController';
+import { getMenuItemImage, uploadMenuItemImage, deleteImageById } from '../controllers/imageController';
 
 const router = express.Router();
 
@@ -41,36 +41,6 @@ const upload = multer({
     },
     fileFilter
 });
-
-/**
- * @swagger
- * /api/images/{imageId}:
- *   get:
- *     tags:
- *       - Images
- *     summary: Get menu item image by image ID
- *     description: Retrieves an image from the database by its unique image ID
- *     parameters:
- *       - in: path
- *         name: imageId
- *         required: true
- *         schema:
- *           type: integer
- *         description: The unique identifier for the image
- *     responses:
- *       200:
- *         description: Image returned successfully
- *         content:
- *           image/*:
- *             schema:
- *               type: string
- *               format: binary
- *       404:
- *         description: Image not found in the database
- *       500:
- *         description: Server error occurred while retrieving the image
- */
-router.get('/:imageId', getMenuItemImage);
 
 /**
  * @swagger
@@ -212,22 +182,52 @@ router.post('/upload/:menuItemId', upload.single('image'), uploadMenuItemImage);
 
 /**
  * @swagger
- * /api/images/menu-item/{menuItemId}:
- *   delete:
+ * /api/images/{imageId}:
+ *   get:
  *     tags:
  *       - Images
- *     summary: Delete all images for a menu item
- *     description: Removes all images associated with a specific menu item from the database
+ *     summary: Get menu item image by image ID
+ *     description: Retrieves an image from the database by its unique image ID
  *     parameters:
  *       - in: path
- *         name: menuItemId
+ *         name: imageId
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the menu item whose images should be deleted
+ *         description: The unique identifier for the image
  *     responses:
  *       200:
- *         description: Images deleted successfully
+ *         description: Image returned successfully
+ *         content:
+ *           image/*:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: Image not found in the database
+ *       500:
+ *         description: Server error occurred while retrieving the image
+ */
+router.get('/:imageId', getMenuItemImage);
+
+/**
+ * @swagger
+ * /api/images/{imageId}:
+ *   delete:
+ *     tags:
+ *       - Images
+ *     summary: Delete a specific image by ID
+ *     description: Removes a specific image from the database based on its unique ID
+ *     parameters:
+ *       - in: path
+ *         name: imageId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The unique identifier of the image to delete
+ *     responses:
+ *       200:
+ *         description: Image deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -235,18 +235,17 @@ router.post('/upload/:menuItemId', upload.single('image'), uploadMenuItemImage);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Images deleted successfully
- *                 deletedCount:
+ *                   example: Image deleted successfully
+ *                 imageId:
  *                   type: integer
- *                   example: 3
- *                 menuItemId:
- *                   type: integer
- *                   example: 56
+ *                   example: 42
  *       400:
- *         description: Invalid menu item ID
+ *         description: Invalid image ID
+ *       404:
+ *         description: Image not found
  *       500:
- *         description: Server error occurred while deleting images
+ *         description: Server error occurred while deleting the image
  */
-router.delete('/menu-item/:menuItemId', deleteMenuItemImages);
+router.delete('/:imageId', deleteImageById); // New route for deleting by image_id
 
 export default router;

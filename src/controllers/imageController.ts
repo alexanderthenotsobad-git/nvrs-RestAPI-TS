@@ -72,37 +72,43 @@ export const getMenuItemImage = async (req: Request, res: Response): Promise<voi
  * Delete all images associated with a specific menu item
  * This is used when changing an image to prevent duplicate entries
  */
-export const deleteMenuItemImages = async (req: Request, res: Response): Promise<void> => {
+/**
+ * Delete a specific image by its ID
+ * @param req - Express request object containing imageId parameter
+ * @param res - Express response object
+ */
+export const deleteImageById = async (req: Request, res: Response): Promise<void> => {
     try {
-        // Extract menu item ID from request parameters
-        const menuItemId = parseInt(req.params.menuItemId, 10);
+        // Parse and validate image ID
+        const imageId = parseInt(req.params.imageId, 10);
 
-        // Validate menu item ID
-        if (isNaN(menuItemId)) {
-            res.status(400).json({ message: 'Invalid menu item ID' });
+        if (isNaN(imageId)) {
+            res.status(400).json({ message: 'Invalid image ID' });
             return;
         }
 
-        // Get the existing images first (for logging purposes)
-        const existingImages = await menuItemService.getAllImagesForMenuItem(menuItemId);
-
-        if (existingImages.length === 0) {
-            res.json({ message: 'No images found to delete', deletedCount: 0 });
+        // Check if the image exists before deleting
+        const image = await menuItemService.getMenuItemImage(imageId);
+        if (!image) {
+            res.status(404).json({ message: 'Image not found' });
             return;
         }
 
-        // Call service to delete all images for this menu item
-        const deletedCount = await menuItemService.deleteImagesForMenuItem(menuItemId);
+        // Delete the image using the service method
+        const deleted = await menuItemService.deleteImageById(imageId);
 
-        res.json({
-            message: 'Images deleted successfully',
-            deletedCount,
-            menuItemId
-        });
+        if (deleted) {
+            res.status(200).json({
+                message: 'Image deleted successfully',
+                imageId: imageId
+            });
+        } else {
+            res.status(500).json({ message: 'Failed to delete image' });
+        }
     } catch (error) {
-        console.error('Error deleting menu item images:', error);
+        console.error('Error deleting image:', error);
         res.status(500).json({
-            message: error instanceof Error ? error.message : 'Unknown error deleting images'
+            message: error instanceof Error ? error.message : 'Unknown error deleting image'
         });
     }
 };

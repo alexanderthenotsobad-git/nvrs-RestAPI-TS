@@ -82,23 +82,24 @@ export class MenuItemService {
         }
     }
     /**
-     * Delete all images for a specific menu item
-     * @param {number} menuItemId - The ID of the menu item
-     * @returns {Promise<number>} The number of deleted images
+     * Delete a specific image by its ID
+     * @param {number} imageId - The ID of the image to delete
+     * @returns {Promise<boolean>} True if the deletion was successful, false otherwise
      * @throws {Error} If database operation fails
      */
-    async deleteImagesForMenuItem(menuItemId: number): Promise<number> {
+    async deleteImageById(imageId: number): Promise<boolean> {
         try {
             const [result] = await this.pool.query<ResultSetHeader>(
-                'DELETE FROM menu_item_images WHERE menu_item_id = ?',
-                [menuItemId]
+                'DELETE FROM menu_item_images WHERE image_id = ?',
+                [imageId]
             );
 
-            return result.affectedRows;
+            // Return true if at least one row was affected (image was deleted)
+            return result.affectedRows > 0;
         } catch (error) {
-            console.error('Error deleting images for menu item:', error);
+            console.error('Error deleting image:', error);
             if (error instanceof Error) {
-                throw new Error(`Failed to delete images: ${error.message}`);
+                throw new Error(`Failed to delete image: ${error.message}`);
             }
             throw new Error('Unknown database error');
         }
