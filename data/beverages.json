@@ -1,0 +1,62 @@
+[
+    {
+        "beverage_name": "Artisan Coffee",
+        "beverage_desc": "Single-origin Colombian pour-over, notes of chocolate and caramel",
+        "price": 3.99,
+        "item_type": "drink"
+    },
+    {
+        "beverage_name": "Iced Tea",
+        "item_desc": "Fresh-brewed black tea served over ice with lemon",
+        "price": 2.99,
+        "item_type": "drink"
+    },
+    {
+        "beverage_name": "Craft IPA",
+        "beverage_desc": "Local hazy IPA with citrus and pine notes",
+        "price": 6.99,
+        "item_type": "drink"
+    },
+    {
+        "beverage_name": "House Red Wine",
+        "beverage_desc": "Rich Cabernet Sauvignon blend with dark fruit notes",
+        "price": 7.99,
+        "item_type": "drink"
+    },
+    {
+        "beverage_name": "House White Wine",
+        "beverage_desc": "Crisp Sauvignon Blanc with citrus and mineral notes",
+        "price": 7.99,
+        "item_type": "drink"
+    },
+    {
+        "beverage_name": "Margarita",
+        "beverage_desc": "Classic margarita with premium tequila, fresh lime, and agave",
+        "price": 8.99,
+        "item_type": "drink"
+    },
+    {
+        "beverage_name": "Moscow Mule",
+        "beverage_desc": "Vodka, spicy ginger beer, and fresh lime served in a copper mug",
+        "price": 8.99,
+        "item_type": "drink"
+    },
+    {
+        "beverage_name": "Soft Drink",
+        "beverage_desc": "Choice of Coke, Diet Coke, Sprite, or Ginger Ale",
+        "price": 2.49,
+        "item_type": "drink"
+    },
+    {
+        "beverage_name": "Sparkling Water",
+        "beverage_desc": "Imported Italian sparkling water with lemon",
+        "price": 3.49,
+        "item_type": "drink"
+    },
+    {
+        "beverage_name": "Craft Stout",
+        "beverage_desc": "Rich and creamy Irish-style stout with roasted malt notes",
+        "price": 6.99,
+        "item_type": "drink"
+    }
+]

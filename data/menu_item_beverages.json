@@ -1,0 +1,277 @@
+[
+    {
+        "menu_item_name": "Classic Nachos",
+        "beverage_name": "Margarita",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Classic Nachos",
+        "beverage_name": "Craft IPA",
+        "pairing_strength": "great"
+    },
+    {
+        "menu_item_name": "Classic Nachos",
+        "beverage_name": "Soft Drink",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Buffalo Wings",
+        "beverage_name": "Craft IPA",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Buffalo Wings",
+        "beverage_name": "Soft Drink",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Hummus & Pita",
+        "beverage_name": "House White Wine",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Hummus & Pita",
+        "beverage_name": "Sparkling Water",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Loaded Potato Skins",
+        "beverage_name": "Craft Stout",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Loaded Potato Skins",
+        "beverage_name": "Soft Drink",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Calamari",
+        "beverage_name": "House White Wine",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Calamari",
+        "beverage_name": "Craft IPA",
+        "pairing_strength": "great"
+    },
+    {
+        "menu_item_name": "Bruschetta",
+        "beverage_name": "House White Wine",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Bruschetta",
+        "beverage_name": "Sparkling Water",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Stuffed Mushrooms",
+        "beverage_name": "House Red Wine",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Stuffed Mushrooms",
+        "beverage_name": "Craft Stout",
+        "pairing_strength": "great"
+    },
+    {
+        "menu_item_name": "Quesadilla",
+        "beverage_name": "Margarita",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Quesadilla",
+        "beverage_name": "Craft IPA",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Classic Burger",
+        "beverage_name": "Craft IPA",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Classic Burger",
+        "beverage_name": "Soft Drink",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Bacon Cheeseburger",
+        "beverage_name": "Craft Stout",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Bacon Cheeseburger",
+        "beverage_name": "Soft Drink",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Veggie Burger",
+        "beverage_name": "Artisan Coffee",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Veggie Burger",
+        "beverage_name": "Sparkling Water",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Grilled Chicken Sandwich",
+        "beverage_name": "Iced Tea",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Grilled Chicken Sandwich",
+        "beverage_name": "House White Wine",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Spicy Chicken Sandwich",
+        "beverage_name": "Craft IPA",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Spicy Chicken Sandwich",
+        "beverage_name": "Soft Drink",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Fish Tacos",
+        "beverage_name": "Margarita",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Fish Tacos",
+        "beverage_name": "House White Wine",
+        "pairing_strength": "great"
+    },
+    {
+        "menu_item_name": "Carne Asada Fries",
+        "beverage_name": "Margarita",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Carne Asada Fries",
+        "beverage_name": "Craft Stout",
+        "pairing_strength": "great"
+    },
+    {
+        "menu_item_name": "Chicken Quesadilla",
+        "beverage_name": "Margarita",
+        "pairing_strength": "great"
+    },
+    {
+        "menu_item_name": "Chicken Quesadilla",
+        "beverage_name": "Soft Drink",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Caesar Salad",
+        "beverage_name": "House White Wine",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Caesar Salad",
+        "beverage_name": "Sparkling Water",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Grilled Salmon",
+        "beverage_name": "House White Wine",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Grilled Salmon",
+        "beverage_name": "Sparkling Water",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Fish and Chips",
+        "beverage_name": "Craft IPA",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Fish and Chips",
+        "beverage_name": "Iced Tea",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "New York Strip Steak",
+        "beverage_name": "House Red Wine",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "New York Strip Steak",
+        "beverage_name": "Craft Stout",
+        "pairing_strength": "great"
+    },
+    {
+        "menu_item_name": "Chicken Alfredo",
+        "beverage_name": "House White Wine",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Chicken Alfredo",
+        "beverage_name": "Sparkling Water",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Spaghetti & Meatballs",
+        "beverage_name": "House Red Wine",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Spaghetti & Meatballs",
+        "beverage_name": "Soft Drink",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Margherita Pizza",
+        "beverage_name": "House Red Wine",
+        "pairing_strength": "great"
+    },
+    {
+        "menu_item_name": "Margherita Pizza",
+        "beverage_name": "Craft IPA",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Pepperoni Pizza",
+        "beverage_name": "Craft IPA",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Pepperoni Pizza",
+        "beverage_name": "Soft Drink",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Chocolate Lava Cake",
+        "beverage_name": "Artisan Coffee",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Chocolate Lava Cake",
+        "beverage_name": "House Red Wine",
+        "pairing_strength": "great"
+    },
+    {
+        "menu_item_name": "New York Cheesecake",
+        "beverage_name": "Artisan Coffee",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "New York Cheesecake",
+        "beverage_name": "House White Wine",
+        "pairing_strength": "good"
+    },
+    {
+        "menu_item_name": "Tiramisu",
+        "beverage_name": "Artisan Coffee",
+        "pairing_strength": "perfect"
+    },
+    {
+        "menu_item_name": "Tiramisu",
+        "beverage_name": "House Red Wine",
+        "pairing_strength": "good"
+    }
+]

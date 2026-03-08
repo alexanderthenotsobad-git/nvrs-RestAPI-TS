@@ -1,0 +1,242 @@
+[
+    {
+        "item_name": "Buffalo Wings",
+        "item_desc": "Crispy chicken wings tossed in our signature spicy buffalo sauce, served with ranch dressing and celery sticks",
+        "price": 12.99,
+        "item_type": "appetizer",
+        "ingredients": "chicken wings, buffalo sauce, butter, garlic, ranch dressing, celery",
+        "dietary_tags": "gluten-free",
+        "style": "american",
+        "rating": 4.7
+    },
+    {
+        "item_name": "Loaded Potato Skins",
+        "item_desc": "Crispy potato skins piled high with cheddar cheese, crispy bacon bits, and fresh green onions, served with sour cream",
+        "price": 10.99,
+        "item_type": "appetizer",
+        "ingredients": "potatoes, cheddar cheese, bacon, green onions, sour cream",
+        "dietary_tags": null,
+        "style": "american",
+        "rating": 4.4
+    },
+    {
+        "item_name": "Bruschetta",
+        "item_desc": "Toasted artisanal bread topped with fresh diced tomatoes, basil, garlic, and a drizzle of balsamic glaze",
+        "price": 7.99,
+        "item_type": "appetizer",
+        "ingredients": "baguette, tomatoes, fresh basil, garlic, olive oil, balsamic vinegar",
+        "dietary_tags": "vegan",
+        "style": "italian",
+        "rating": 4.3
+    },
+    {
+        "item_name": "Stuffed Mushrooms",
+        "item_desc": "Cremini mushroom caps filled with a savory garlic herb cheese blend, baked until golden and bubbly",
+        "price": 9.49,
+        "item_type": "appetizer",
+        "ingredients": "cremini mushrooms, cream cheese, parmesan, garlic, parsley, thyme, breadcrumbs",
+        "dietary_tags": "vegetarian",
+        "style": "american",
+        "rating": 4.1
+    },
+    {
+        "item_name": "Quesadilla",
+        "item_desc": "Large flour tortilla filled with melted cheddar and monterey jack cheese, served with sour cream and fresh salsa",
+        "price": 8.49,
+        "item_type": "appetizer",
+        "ingredients": "flour tortilla, cheddar cheese, monterey jack cheese, salsa, sour cream",
+        "dietary_tags": "vegetarian",
+        "style": "mexican",
+        "rating": 4.0
+    },
+    {
+        "item_name": "Classic Burger",
+        "item_desc": "Half-pound Angus beef patty grilled to perfection, topped with crisp lettuce, ripe tomato, red onion, and pickles on a brioche bun",
+        "price": 13.99,
+        "item_type": "entree",
+        "ingredients": "angus beef, lettuce, tomato, red onion, pickles, brioche bun, ketchup, mustard",
+        "dietary_tags": null,
+        "style": "american",
+        "rating": 4.6
+    },
+    {
+        "item_name": "Bacon Cheeseburger",
+        "item_desc": "Classic burger elevated with crispy applewood-smoked bacon and melted cheddar cheese",
+        "price": 15.99,
+        "item_type": "entree",
+        "ingredients": "angus beef, applewood bacon, cheddar cheese, lettuce, tomato, onion, brioche bun",
+        "dietary_tags": null,
+        "style": "american",
+        "rating": 4.8
+    },
+    {
+        "item_name": "Veggie Burger",
+        "item_desc": "Hearty black bean and quinoa patty topped with fresh avocado slices and alfalfa sprouts on a whole wheat bun",
+        "price": 12.99,
+        "item_type": "entree",
+        "ingredients": "black beans, quinoa, avocado, alfalfa sprouts, tomato, red onion, whole wheat bun, vegan aioli",
+        "dietary_tags": "vegetarian, vegan option",
+        "style": "american",
+        "rating": 4.2
+    },
+    {
+        "item_name": "Grilled Chicken Sandwich",
+        "item_desc": "Juicy grilled chicken breast marinated in herbs, served with lettuce, tomato, and honey mustard on a brioche bun",
+        "price": 12.99,
+        "item_type": "entree",
+        "ingredients": "chicken breast, lettuce, tomato, red onion, honey mustard, brioche bun",
+        "dietary_tags": null,
+        "style": "american",
+        "rating": 4.3
+    },
+    {
+        "item_name": "Spicy Chicken Sandwich",
+        "item_desc": "Crispy fried chicken breast tossed in Nashville hot sauce, topped with pickles and comeback sauce",
+        "price": 13.49,
+        "item_type": "entree",
+        "ingredients": "chicken breast, Nashville hot sauce, pickles, comeback sauce, lettuce, brioche bun",
+        "dietary_tags": null,
+        "style": "american",
+        "rating": 4.7
+    },
+    {
+        "item_name": "Fish Tacos",
+        "item_desc": "Three corn tortillas filled with grilled cod, crisp cabbage slaw, and zesty lime crema, garnished with cilantro",
+        "price": 14.99,
+        "item_type": "entree",
+        "ingredients": "cod, cabbage, lime, crema, corn tortillas, cilantro, radish",
+        "dietary_tags": null,
+        "style": "mexican",
+        "rating": 4.5
+    },
+    {
+        "item_name": "Carne Asada Fries",
+        "item_desc": "Crispy french fries loaded with grilled marinated steak, melted cheese, fresh guacamole, and sour cream",
+        "price": 14.99,
+        "item_type": "entree",
+        "ingredients": "fries, skirt steak, cheddar cheese, guacamole, sour cream, jalapeños, pico de gallo",
+        "dietary_tags": null,
+        "style": "mexican",
+        "rating": 4.9
+    },
+    {
+        "item_name": "Chicken Quesadilla",
+        "item_desc": "Flour tortilla filled with seasoned grilled chicken and melted cheese blend, served with sour cream and salsa",
+        "price": 11.99,
+        "item_type": "entree",
+        "ingredients": "flour tortilla, chicken breast, cheddar cheese, monterey jack cheese, salsa, sour cream",
+        "dietary_tags": null,
+        "style": "mexican",
+        "rating": 4.1
+    },
+    {
+        "item_name": "Caesar Salad",
+        "item_desc": "Crisp romaine hearts tossed in our house Caesar dressing, topped with garlic croutons and shaved parmesan",
+        "price": 8.99,
+        "item_type": "entree",
+        "ingredients": "romaine lettuce, caesar dressing, croutons, parmesan cheese, garlic",
+        "dietary_tags": "vegetarian",
+        "style": "american",
+        "rating": 3.9
+    },
+    {
+        "item_name": "Grilled Salmon",
+        "item_desc": "Fresh Atlantic salmon fillet grilled and finished with lemon butter sauce, served with seasonal vegetables and rice pilaf",
+        "price": 18.99,
+        "item_type": "entree",
+        "ingredients": "atlantic salmon, lemon, butter, garlic, asparagus, zucchini, rice pilaf",
+        "dietary_tags": "gluten-free",
+        "style": "seafood",
+        "rating": 4.7
+    },
+    {
+        "item_name": "Fish and Chips",
+        "item_desc": "Beer-battered Atlantic cod fried until golden, served with thick-cut fries, tartar sauce, and malt vinegar",
+        "price": 14.99,
+        "item_type": "entree",
+        "ingredients": "atlantic cod, beer batter, fries, tartar sauce, malt vinegar, lemon",
+        "dietary_tags": null,
+        "style": "british",
+        "rating": 4.2
+    },
+    {
+        "item_name": "New York Strip Steak",
+        "item_desc": "12oz prime strip steak grilled to your specification, served with garlic mashed potatoes and sautéed mushrooms",
+        "price": 24.99,
+        "item_type": "entree",
+        "ingredients": "beef strip steak, butter, garlic, rosemary, mashed potatoes, mushrooms",
+        "dietary_tags": null,
+        "style": "american",
+        "rating": 4.8
+    },
+    {
+        "item_name": "Chicken Alfredo",
+        "item_desc": "Fettuccine pasta tossed in a rich and creamy alfredo sauce with grilled chicken breast and fresh parsley",
+        "price": 15.99,
+        "item_type": "entree",
+        "ingredients": "fettuccine, chicken breast, heavy cream, parmesan cheese, garlic, butter, parsley",
+        "dietary_tags": null,
+        "style": "italian",
+        "rating": 4.4
+    },
+    {
+        "item_name": "Spaghetti & Meatballs",
+        "item_desc": "Classic spaghetti served with three house-made beef and pork meatballs in our signature marinara sauce",
+        "price": 14.99,
+        "item_type": "entree",
+        "ingredients": "spaghetti, beef, pork, breadcrumbs, parmesan, marinara sauce, basil",
+        "dietary_tags": null,
+        "style": "italian",
+        "rating": 4.5
+    },
+    {
+        "item_name": "Margherita Pizza",
+        "item_desc": "Thin crust pizza topped with San Marzano tomato sauce, fresh mozzarella, basil, and a drizzle of olive oil",
+        "price": 13.99,
+        "item_type": "entree",
+        "ingredients": "pizza dough, san marzano tomatoes, fresh mozzarella, basil, olive oil, garlic",
+        "dietary_tags": "vegetarian",
+        "style": "italian",
+        "rating": 4.3
+    },
+    {
+        "item_name": "Pepperoni Pizza",
+        "item_desc": "Classic pepperoni pizza with mozzarella and our house tomato sauce on a hand-tossed crust",
+        "price": 14.99,
+        "item_type": "entree",
+        "ingredients": "pizza dough, tomato sauce, mozzarella, pepperoni, oregano",
+        "dietary_tags": null,
+        "style": "italian",
+        "rating": 4.6
+    },
+    {
+        "item_name": "Chocolate Lava Cake",
+        "item_desc": "Warm chocolate cake with a molten chocolate center, served with vanilla bean ice cream and raspberry coulis",
+        "price": 6.99,
+        "item_type": "dessert",
+        "ingredients": "dark chocolate, butter, eggs, sugar, flour, vanilla ice cream, raspberries",
+        "dietary_tags": "vegetarian",
+        "style": "dessert",
+        "rating": 4.9
+    },
+    {
+        "item_name": "New York Cheesecake",
+        "item_desc": "Rich and creamy New York style cheesecake with a graham cracker crust, topped with seasonal berry compote",
+        "price": 5.99,
+        "item_type": "dessert",
+        "ingredients": "cream cheese, graham crackers, butter, eggs, sugar, sour cream, mixed berries",
+        "dietary_tags": "vegetarian",
+        "style": "dessert",
+        "rating": 4.5
+    },
+    {
+        "item_name": "Tiramisu",
+        "item_desc": "Classic Italian dessert with espresso-soaked ladyfingers layered with mascarpone cream and dusted with cocoa",
+        "price": 6.49,
+        "item_type": "dessert",
+        "ingredients": "ladyfingers, espresso, mascarpone, cocoa powder, eggs, sugar, marsala wine",
+        "dietary_tags": "vegetarian",
+        "style": "italian",
+        "rating": 4.7
+    }
+]

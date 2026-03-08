@@ -1,0 +1,191 @@
+[
+    {
+        "item_name": "Classic Nachos",
+        "calories": 890,
+        "protein": 18.5,
+        "fat": 42.0,
+        "carbs": 98.0
+    },
+    {
+        "item_name": "Buffalo Wings",
+        "calories": 720,
+        "protein": 42.0,
+        "fat": 48.0,
+        "carbs": 12.0
+    },
+    {
+        "item_name": "Hummus & Pita",
+        "calories": 540,
+        "protein": 15.0,
+        "fat": 28.0,
+        "carbs": 58.0
+    },
+    {
+        "item_name": "Loaded Potato Skins",
+        "calories": 820,
+        "protein": 22.0,
+        "fat": 52.0,
+        "carbs": 62.0
+    },
+    {
+        "item_name": "Calamari",
+        "calories": 680,
+        "protein": 32.0,
+        "fat": 38.0,
+        "carbs": 48.0
+    },
+    {
+        "item_name": "Bruschetta",
+        "calories": 320,
+        "protein": 8.0,
+        "fat": 14.0,
+        "carbs": 42.0
+    },
+    {
+        "item_name": "Stuffed Mushrooms",
+        "calories": 450,
+        "protein": 12.0,
+        "fat": 32.0,
+        "carbs": 28.0
+    },
+    {
+        "item_name": "Quesadilla",
+        "calories": 580,
+        "protein": 24.0,
+        "fat": 32.0,
+        "carbs": 48.0
+    },
+    {
+        "item_name": "Classic Burger",
+        "calories": 850,
+        "protein": 48.0,
+        "fat": 52.0,
+        "carbs": 52.0
+    },
+    {
+        "item_name": "Bacon Cheeseburger",
+        "calories": 980,
+        "protein": 56.0,
+        "fat": 64.0,
+        "carbs": 54.0
+    },
+    {
+        "item_name": "Veggie Burger",
+        "calories": 620,
+        "protein": 28.0,
+        "fat": 24.0,
+        "carbs": 78.0
+    },
+    {
+        "item_name": "Grilled Chicken Sandwich",
+        "calories": 580,
+        "protein": 44.0,
+        "fat": 18.0,
+        "carbs": 62.0
+    },
+    {
+        "item_name": "Spicy Chicken Sandwich",
+        "calories": 720,
+        "protein": 42.0,
+        "fat": 36.0,
+        "carbs": 58.0
+    },
+    {
+        "item_name": "Fish Tacos",
+        "calories": 560,
+        "protein": 32.0,
+        "fat": 22.0,
+        "carbs": 58.0
+    },
+    {
+        "item_name": "Carne Asada Fries",
+        "calories": 1150,
+        "protein": 48.0,
+        "fat": 68.0,
+        "carbs": 92.0
+    },
+    {
+        "item_name": "Chicken Quesadilla",
+        "calories": 720,
+        "protein": 42.0,
+        "fat": 38.0,
+        "carbs": 54.0
+    },
+    {
+        "item_name": "Caesar Salad",
+        "calories": 480,
+        "protein": 12.0,
+        "fat": 38.0,
+        "carbs": 22.0
+    },
+    {
+        "item_name": "Grilled Salmon",
+        "calories": 590,
+        "protein": 46.0,
+        "fat": 32.0,
+        "carbs": 38.0
+    },
+    {
+        "item_name": "Fish and Chips",
+        "calories": 890,
+        "protein": 32.0,
+        "fat": 48.0,
+        "carbs": 82.0
+    },
+    {
+        "item_name": "New York Strip Steak",
+        "calories": 780,
+        "protein": 58.0,
+        "fat": 52.0,
+        "carbs": 28.0
+    },
+    {
+        "item_name": "Chicken Alfredo",
+        "calories": 920,
+        "protein": 48.0,
+        "fat": 52.0,
+        "carbs": 72.0
+    },
+    {
+        "item_name": "Spaghetti & Meatballs",
+        "calories": 880,
+        "protein": 42.0,
+        "fat": 38.0,
+        "carbs": 88.0
+    },
+    {
+        "item_name": "Margherita Pizza",
+        "calories": 720,
+        "protein": 28.0,
+        "fat": 28.0,
+        "carbs": 92.0
+    },
+    {
+        "item_name": "Pepperoni Pizza",
+        "calories": 840,
+        "protein": 36.0,
+        "fat": 38.0,
+        "carbs": 94.0
+    },
+    {
+        "item_name": "Chocolate Lava Cake",
+        "calories": 520,
+        "protein": 8.0,
+        "fat": 28.0,
+        "carbs": 62.0
+    },
+    {
+        "item_name": "New York Cheesecake",
+        "calories": 480,
+        "protein": 10.0,
+        "fat": 32.0,
+        "carbs": 42.0
+    },
+    {
+        "item_name": "Tiramisu",
+        "calories": 440,
+        "protein": 8.0,
+        "fat": 24.0,
+        "carbs": 52.0
+    }
+]
