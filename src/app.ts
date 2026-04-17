@@ -6,11 +6,11 @@ const envResult = dotenv.config({ path: path.join(__dirname, '../.env') });
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import menuRoutes from './routes/menuRoutes';
+import dataImportRoutes from './routes/dataImportRoutes';  // ← ADD THIS
 import { connectToDatabase } from './config/db';
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './config/swagger';
 import imageRoutes from './routes/imageRoutes';
-
 
 const app: Express = express();
 
@@ -21,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/', menuRoutes);
+app.use('/import', dataImportRoutes);  // ← ADD THIS
 app.use('/api/images', imageRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
