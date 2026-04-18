@@ -11,6 +11,7 @@ import { connectToDatabase } from './config/db';
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './config/swagger';
 import imageRoutes from './routes/imageRoutes';
+import ingredientRoutes from './routes/ingredientRoutes';
 
 const app: Express = express();
 
@@ -28,6 +29,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
 });
+
+app.use('/ingredients', ingredientRoutes);
 
 const PORT = process.env.PORT || 3002;
 

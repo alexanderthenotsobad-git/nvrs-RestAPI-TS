@@ -12,10 +12,39 @@ interface MenuItemRow extends RowDataPacket {
     item_desc: string;
     price: number;
     item_type: string;
+    dietary_tags: string | null;
+    style: string | null;
+    rating: number | null;
     image_data?: Buffer;
     item_image?: Buffer;
     image_id?: number;
     image_type?: string;
+}
+
+interface IngredientDetail {
+    ingredient_id: number;
+    ingredient_name: string;
+    category: string | null;
+    is_allergen: boolean;
+    quantity: number | null;
+    unit: string | null;
+    preparation_note: string | null;
+    is_optional: boolean;
+    spice_level: string | null;
+    custom_attributes: any;
+}
+
+interface MenuItemWithIngredients {
+    item_id: number;
+    item_name: string;
+    item_desc: string;
+    price: number;
+    item_type: string;
+    dietary_tags: string | null;
+    style: string | null;
+    rating: number | null;
+    image_id: number | null;
+    ingredients: IngredientDetail[];
 }
 
 export class MenuItemService {
@@ -45,11 +74,181 @@ export class MenuItemService {
                 item_desc: item.item_desc,
                 price: item.price,
                 item_type: item.item_type,
+                dietary_tags: item.dietary_tags,
+                style: item.style,
+                rating: item.rating,
                 image_id: item.image_id
             }));
         } catch (error) {
             if (error instanceof Error) {
                 throw new Error(`Failed to fetch items: ${error.message}`);
+            }
+            throw new Error('Unknown database error');
+        }
+    }
+
+    /**
+     * Retrieves all menu items with their full ingredient details
+     * @returns {Promise<MenuItemWithIngredients[]>} Array of menu items with nested ingredients arrays
+     * @throws {Error} If database query fails
+     */
+    async getAllMenuItemsWithIngredients(): Promise<MenuItemWithIngredients[]> {
+        const query = `
+            SELECT 
+                m.item_id,
+                m.item_name,
+                m.item_desc,
+                m.price,
+                m.item_type,
+                m.dietary_tags,
+                m.style,
+                m.rating,
+                mi.image_id,
+                i.ingredient_id,
+                i.ingredient_name,
+                i.category,
+                i.is_allergen,
+                mii.quantity,
+                mii.unit,
+                mii.preparation_note,
+                mii.is_optional,
+                mii.spice_level,
+                mii.custom_attributes
+            FROM menu_items m
+            LEFT JOIN menu_item_images mi ON m.item_id = mi.menu_item_id
+            LEFT JOIN menu_item_ingredients mii ON m.item_id = mii.menu_item_id
+            LEFT JOIN ingredients i ON mii.ingredient_id = i.ingredient_id
+            ORDER BY m.item_id, i.ingredient_name
+        `;
+
+        try {
+            const [rows] = await this.pool.query<RowDataPacket[]>(query);
+
+            // Group ingredients by menu item
+            const menuItemsMap = new Map<number, MenuItemWithIngredients>();
+
+            for (const row of rows) {
+                if (!menuItemsMap.has(row.item_id)) {
+                    menuItemsMap.set(row.item_id, {
+                        item_id: row.item_id,
+                        item_name: row.item_name,
+                        item_desc: row.item_desc,
+                        price: row.price,
+                        item_type: row.item_type,
+                        dietary_tags: row.dietary_tags,
+                        style: row.style,
+                        rating: row.rating,
+                        image_id: row.image_id,
+                        ingredients: []
+                    });
+                }
+
+                // Add ingredient if it exists
+                if (row.ingredient_id) {
+                    const menuItem = menuItemsMap.get(row.item_id);
+                    if (menuItem) {
+                        menuItem.ingredients.push({
+                            ingredient_id: row.ingredient_id,
+                            ingredient_name: row.ingredient_name,
+                            category: row.category,
+                            is_allergen: row.is_allergen === 1,
+                            quantity: row.quantity,
+                            unit: row.unit,
+                            preparation_note: row.preparation_note,
+                            is_optional: row.is_optional === 1,
+                            spice_level: row.spice_level,
+                            custom_attributes: row.custom_attributes
+                        });
+                    }
+                }
+            }
+
+            return Array.from(menuItemsMap.values());
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error(`Failed to fetch items with ingredients: ${error.message}`);
+            }
+            throw new Error('Unknown database error');
+        }
+    }
+
+    /**
+     * Get a single menu item by ID with its ingredients
+     * @param {number} itemId - The ID of the menu item
+     * @returns {Promise<MenuItemWithIngredients | null>} Menu item with nested ingredients or null if not found
+     */
+    async getMenuItemWithIngredientsById(itemId: number): Promise<MenuItemWithIngredients | null> {
+        const query = `
+            SELECT 
+                m.item_id,
+                m.item_name,
+                m.item_desc,
+                m.price,
+                m.item_type,
+                m.dietary_tags,
+                m.style,
+                m.rating,
+                mi.image_id,
+                i.ingredient_id,
+                i.ingredient_name,
+                i.category,
+                i.is_allergen,
+                mii.quantity,
+                mii.unit,
+                mii.preparation_note,
+                mii.is_optional,
+                mii.spice_level,
+                mii.custom_attributes
+            FROM menu_items m
+            LEFT JOIN menu_item_images mi ON m.item_id = mi.menu_item_id
+            LEFT JOIN menu_item_ingredients mii ON m.item_id = mii.menu_item_id
+            LEFT JOIN ingredients i ON mii.ingredient_id = i.ingredient_id
+            WHERE m.item_id = ?
+            ORDER BY i.ingredient_name
+        `;
+
+        try {
+            const [rows] = await this.pool.query<RowDataPacket[]>(query, [itemId]);
+
+            if (rows.length === 0) {
+                return null;
+            }
+
+            const menuItem: MenuItemWithIngredients = {
+                item_id: rows[0].item_id,
+                item_name: rows[0].item_name,
+                item_desc: rows[0].item_desc,
+                price: rows[0].price,
+                item_type: rows[0].item_type,
+                dietary_tags: rows[0].dietary_tags,
+                style: rows[0].style,
+                rating: rows[0].rating,
+                image_id: rows[0].image_id,
+                ingredients: []
+            };
+
+            // Add ingredients (filter out rows where ingredient_id is null)
+            for (const row of rows) {
+                if (row.ingredient_id) {
+                    menuItem.ingredients.push({
+                        ingredient_id: row.ingredient_id,
+                        ingredient_name: row.ingredient_name,
+                        category: row.category,
+                        is_allergen: row.is_allergen === 1,
+                        quantity: row.quantity,
+                        unit: row.unit,
+                        preparation_note: row.preparation_note,
+                        is_optional: row.is_optional === 1,
+                        spice_level: row.spice_level,
+                        custom_attributes: row.custom_attributes
+                    });
+                }
+            }
+
+            return menuItem;
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error(`Failed to fetch menu item: ${error.message}`);
             }
             throw new Error('Unknown database error');
         }
@@ -81,6 +280,7 @@ export class MenuItemService {
             throw new Error('Failed to retrieve image');
         }
     }
+
     /**
      * Delete a specific image by its ID
      * @param {number} imageId - The ID of the image to delete
@@ -94,7 +294,6 @@ export class MenuItemService {
                 [imageId]
             );
 
-            // Return true if at least one row was affected (image was deleted)
             return result.affectedRows > 0;
         } catch (error) {
             console.error('Error deleting image:', error);
@@ -104,6 +303,7 @@ export class MenuItemService {
             throw new Error('Unknown database error');
         }
     }
+
     /**
      * Gets the most recent image ID for a menu item
      * @param {number} menuItemId - The ID of the menu item
@@ -134,13 +334,13 @@ export class MenuItemService {
      * @returns {Promise<Array<{image_id: number, upload_date: Date}>>} Array of objects containing image_id and upload_date
      * @throws {Error} If database query fails
      */
-    async getAllImagesForMenuItem(menuItemId: number): Promise<{ image_id: number, upload_date: Date }[]> {
+    async getAllImagesForMenuItem(menuItemId: number): Promise<{ image_id: number; upload_date: Date }[]> {
         try {
             const [rows] = await this.pool.query<RowDataPacket[]>(
                 'SELECT image_id, upload_date FROM menu_item_images WHERE menu_item_id = ? ORDER BY upload_date DESC',
                 [menuItemId]
             );
-            return rows as { image_id: number, upload_date: Date }[];
+            return rows as { image_id: number; upload_date: Date }[];
         } catch (error) {
             console.error('Error getting images for menu item:', error);
             throw new Error('Failed to retrieve images for menu item');
@@ -161,7 +361,6 @@ export class MenuItemService {
         imageType: string
     ): Promise<number> {
         try {
-            // First verify that the menu item exists
             const [menuItems] = await this.pool.query<RowDataPacket[]>(
                 'SELECT * FROM menu_items WHERE item_id = ?',
                 [menuItemId]
@@ -171,7 +370,6 @@ export class MenuItemService {
                 throw new Error('Menu item not found');
             }
 
-            // Insert the image
             const [result] = await this.pool.query<ResultSetHeader>(
                 'INSERT INTO menu_item_images (menu_item_id, image_data, image_type) VALUES (?, ?, ?)',
                 [menuItemId, imageData, imageType]
@@ -199,15 +397,20 @@ export class MenuItemService {
         return result.insertId;
     }
 
+    /**
+     * Update a menu item
+     * @param {number} itemId - The ID of the menu item to update
+     * @param {Partial<MenuItem>} menuItem - The menu item data to update
+     * @returns {Promise<number>} The number of affected rows
+     * @throws {Error} If database operation fails
+     */
     async updateMenuItem(itemId: number, menuItem: Partial<MenuItem>): Promise<number> {
         try {
             const { item_name, item_desc, price, item_type } = menuItem;
 
-            // Create an array to store field updates and values
             const updates: string[] = [];
             const values: any[] = [];
 
-            // Only add fields that are provided
             if (item_name !== undefined) {
                 updates.push('item_name = ?');
                 values.push(item_name);
@@ -228,12 +431,10 @@ export class MenuItemService {
                 values.push(item_type);
             }
 
-            // If no fields to update, return 0 (no rows affected)
             if (updates.length === 0) {
                 return 0;
             }
 
-            // Add itemId to the values array
             values.push(itemId);
 
             const query = `UPDATE menu_items SET ${updates.join(', ')} WHERE item_id = ?`;
@@ -263,4 +464,3 @@ export class MenuItemService {
         return result.affectedRows;
     }
 }
-
