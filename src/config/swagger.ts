@@ -48,6 +48,80 @@ const options = {
                         item_type: {
                             type: 'string',
                             description: 'Type/category of the menu item'
+                        },
+                        dietary_tags: {
+                            type: 'string',
+                            description: 'Dietary tags (vegetarian, vegan, gluten-free, etc.)',
+                            nullable: true
+                        },
+                        style: {
+                            type: 'string',
+                            description: 'Cuisine style (american, mexican, italian, etc.)',
+                            nullable: true
+                        },
+                        rating: {
+                            type: 'number',
+                            format: 'decimal',
+                            description: 'Average rating of the menu item',
+                            nullable: true
+                        },
+                        image_id: {
+                            type: 'integer',
+                            description: 'ID of the associated image',
+                            nullable: true
+                        }
+                    }
+                },
+                IngredientDetail: {
+                    type: 'object',
+                    properties: {
+                        ingredient_id: {
+                            type: 'integer',
+                            description: 'The unique identifier of the ingredient'
+                        },
+                        ingredient_name: {
+                            type: 'string',
+                            description: 'Name of the ingredient'
+                        },
+                        category: {
+                            type: 'string',
+                            enum: ['protein', 'vegetable', 'spice', 'dairy', 'grain', 'oil', 'other'],
+                            description: 'Category of the ingredient',
+                            nullable: true
+                        },
+                        is_allergen: {
+                            type: 'boolean',
+                            description: 'Whether this ingredient is a common allergen'
+                        },
+                        quantity: {
+                            type: 'number',
+                            format: 'decimal',
+                            description: 'Quantity of the ingredient used',
+                            nullable: true
+                        },
+                        unit: {
+                            type: 'string',
+                            description: 'Unit of measurement (g, ml, each, etc.)',
+                            nullable: true
+                        },
+                        preparation_note: {
+                            type: 'string',
+                            description: 'How the ingredient is prepared (chopped, minced, shredded, etc.)',
+                            nullable: true
+                        },
+                        is_optional: {
+                            type: 'boolean',
+                            description: 'Whether the ingredient can be omitted by request'
+                        },
+                        spice_level: {
+                            type: 'string',
+                            description: 'Spice level for spicy ingredients (mild, medium, hot)',
+                            nullable: true
+                        },
+                        custom_attributes: {
+                            type: 'object',
+                            description: 'Additional JSON attributes for ingredient-specific details',
+                            nullable: true
                         }
                     }
                 }

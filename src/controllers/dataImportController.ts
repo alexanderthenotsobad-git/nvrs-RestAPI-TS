@@ -169,8 +169,6 @@ export const importPatrons = async (req: Request, res: Response) => {
     }
 };
 
-// Note: Your schema is MISSING an order_items table
-// You'll need to create this first for order imports to work
 export const importOrders = async (req: Request, res: Response) => {
     const connection = await pool.getConnection();
     try {
@@ -188,7 +186,6 @@ export const importOrders = async (req: Request, res: Response) => {
 
             const orderId = (orderResult as any).insertId;
 
-            // This assumes you have an order_items table
             for (const item of order.items) {
                 await connection.query(
                     `INSERT INTO order_items (order_id, item_id, quantity, price_at_time) 
@@ -213,6 +210,98 @@ export const importOrders = async (req: Request, res: Response) => {
         await connection.rollback();
         console.error('Import error:', error);
         res.status(500).json({ error: 'Failed to import orders' });
+    } finally {
+        connection.release();
+    }
+};
+
+export const importMenuItemIngredients = async (req: Request, res: Response) => {
+    const connection = await pool.getConnection();
+    const errors: Array<{ index: number; menu_item_id: number; ingredient_name: string; error: string }> = [];
+    let successCount = 0;
+
+    try {
+        await connection.beginTransaction();
+
+        const items = req.body;
+
+        if (!Array.isArray(items)) {
+            res.status(400).json({ error: 'Request body must be an array of menu item ingredients' });
+            return;
+        }
+
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            const { menu_item_id, ingredient_name, quantity, unit, preparation_note, is_optional, spice_level, custom_attributes } = item;
+
+            if (!menu_item_id) {
+                errors.push({
+                    index: i,
+                    menu_item_id: 0,
+                    ingredient_name: ingredient_name || 'unknown',
+                    error: 'Missing menu_item_id'
+                });
+                continue;
+            }
+
+            if (!ingredient_name) {
+                errors.push({
+                    index: i,
+                    menu_item_id: menu_item_id,
+                    ingredient_name: 'unknown',
+                    error: 'Missing ingredient_name'
+                });
+                continue;
+            }
+
+            const [ingredientRows] = await connection.query(
+                'SELECT ingredient_id FROM ingredients WHERE ingredient_name = ?',
+                [ingredient_name]
+            ) as any[];
+
+            if (ingredientRows.length === 0) {
+                errors.push({
+                    index: i,
+                    menu_item_id: menu_item_id,
+                    ingredient_name: ingredient_name,
+                    error: `Ingredient '${ingredient_name}' not found in ingredients table`
+                });
+                continue;
+            }
+
+            const ingredient_id = ingredientRows[0].ingredient_id;
+
+            await connection.query(
+                `INSERT INTO menu_item_ingredients 
+                 (menu_item_id, ingredient_id, quantity, unit, preparation_note, is_optional, spice_level, custom_attributes) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [menu_item_id, ingredient_id, quantity || null, unit || null, preparation_note || null, is_optional || 0, spice_level || null, custom_attributes || null]
+            );
+
+            successCount++;
+        }
+
+        await connection.commit();
+
+        if (errors.length > 0) {
+            console.error('Import errors:', JSON.stringify(errors, null, 2));
+        }
+
+        res.status(201).json({
+            message: 'Menu item ingredients imported successfully',
+            total: items.length,
+            successCount: successCount,
+            errorCount: errors.length,
+            errors: errors.length > 0 ? errors : undefined
+        });
+
+    } catch (error) {
+        await connection.rollback();
+        console.error('Import error:', error);
+        res.status(500).json({
+            error: 'Failed to import menu item ingredients',
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
     } finally {
         connection.release();
     }

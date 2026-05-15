@@ -5,7 +5,7 @@
   "scripts": {
     "generate-docs": "ts-node src/scripts/generateDocs.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/app.ts",
+    "dev": "dotenv -e .env.dev -- nodemon --exec ts-node src/app.ts",
     "clean": "find ./src -name \"*.js\" -type f -delete && find ./src -name \"*.js.map\" -type f -delete && rimraf dist",
     "prebuild": "npm run clean",
     "build": "tsc",
@@ -33,6 +33,7 @@
     "@types/node": "^22.10.7",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.7",
+    "dotenv-cli": "^11.0.0",
     "nodemon": "^3.1.9",
     "rimraf": "^5.0.7",
     "ts-node": "^10.9.2",

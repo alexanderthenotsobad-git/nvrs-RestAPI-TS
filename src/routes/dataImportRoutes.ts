@@ -5,7 +5,8 @@ import {
     importPatrons,
     importOrders,
     importBeverages,
-    importMenuBeveragePairs
+    importMenuBeveragePairs,
+    importMenuItemIngredients  // Add this import
 } from '../controllers/dataImportController';
 
 const router = Router();
@@ -120,8 +121,6 @@ router.post('/beverages', importBeverages);
  */
 router.post('/nutrition', importNutrition);
 
-// Import routes
-
 /**
  * @swagger
  * /patrons:
@@ -218,5 +217,44 @@ router.post('/orders', importOrders);
  *         description: Failed to import beverage pairings
  */
 router.post('/beverage-pairs', importMenuBeveragePairs);
+
+/**
+ * @swagger
+ * /menu-item-ingredients:
+ *   post:
+ *     summary: Import menu item ingredients (bridge table)
+ *     tags: [Import]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 menu_item_id:
+ *                   type: integer
+ *                 ingredient_name:
+ *                   type: string
+ *                 quantity:
+ *                   type: number
+ *                 unit:
+ *                   type: string
+ *                 preparation_note:
+ *                   type: string
+ *                 is_optional:
+ *                   type: boolean
+ *                 spice_level:
+ *                   type: string
+ *                 custom_attributes:
+ *                   type: object
+ *     responses:
+ *       201:
+ *         description: Menu item ingredients imported successfully
+ *       500:
+ *         description: Failed to import menu item ingredients
+ */
+router.post('/menu-item-ingredients', importMenuItemIngredients);
 
 export default router;

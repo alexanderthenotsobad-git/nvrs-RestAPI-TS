@@ -1,7 +1,14 @@
 // /var/www/RestAPI/src/routes/menuRoutes.ts
 import express from 'express';
 import { Router } from 'express';
-import { getAllMenuItems, createMenuItem, deleteMenuItem, updateMenuItem } from '../controllers/menuController';
+import {
+    getAllMenuItems,
+    createMenuItem,
+    deleteMenuItem,
+    updateMenuItem,
+    getAllMenuItemsWithIngredients,
+    getMenuItemWithIngredientsById
+} from '../controllers/menuController';
 
 const router = Router();
 
@@ -12,7 +19,7 @@ const router = Router();
  *     tags:
  *       - Menu Items
  *     summary: Get all menu items
- *     description: Retrieves all menu items from the database
+ *     description: Retrieves all menu items from the database (basic info only, no ingredients)
  *     responses:
  *       200:
  *         description: A list of menu items
@@ -26,6 +33,103 @@ const router = Router();
  *         description: Server error
  */
 router.get('/', getAllMenuItems);
+
+/**
+ * @swagger
+ * /with-ingredients:
+ *   get:
+ *     tags:
+ *       - Menu Items
+ *     summary: Get all menu items with ingredients
+ *     description: Retrieves all menu items with their complete ingredient details nested inside
+ *     responses:
+ *       200:
+ *         description: A list of menu items with ingredients
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   item_id:
+ *                     type: integer
+ *                   item_name:
+ *                     type: string
+ *                   item_desc:
+ *                     type: string
+ *                   price:
+ *                     type: number
+ *                   item_type:
+ *                     type: string
+ *                   dietary_tags:
+ *                     type: string
+ *                   style:
+ *                     type: string
+ *                   rating:
+ *                     type: number
+ *                   image_id:
+ *                     type: integer
+ *                   ingredients:
+ *                     type: array
+ *                     items:
+ *                       $ref: '#/components/schemas/IngredientDetail'
+ *       500:
+ *         description: Server error
+ */
+router.get('/with-ingredients', getAllMenuItemsWithIngredients);
+
+/**
+ * @swagger
+ * /{id}/with-ingredients:
+ *   get:
+ *     tags:
+ *       - Menu Items
+ *     summary: Get a menu item by ID with its ingredients
+ *     description: Retrieves a single menu item with its complete ingredient details nested inside
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Menu item ID
+ *     responses:
+ *       200:
+ *         description: Menu item with ingredients found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 item_id:
+ *                   type: integer
+ *                 item_name:
+ *                   type: string
+ *                 item_desc:
+ *                   type: string
+ *                 price:
+ *                   type: number
+ *                 item_type:
+ *                   type: string
+ *                 dietary_tags:
+ *                   type: string
+ *                 style:
+ *                   type: string
+ *                 rating:
+ *                   type: number
+ *                 image_id:
+ *                   type: integer
+ *                 ingredients:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/IngredientDetail'
+ *       404:
+ *         description: Menu item not found
+ *       500:
+ *         description: Server error
+ */
+router.get('/:id/with-ingredients', getMenuItemWithIngredientsById);
 
 /**
  * @swagger

@@ -15,6 +15,45 @@ export const getAllMenuItems = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Get all menu items with their full ingredient details
+ * Returns nested ingredients array for each menu item
+ */
+export const getAllMenuItemsWithIngredients = async (req: Request, res: Response) => {
+    try {
+        const items = await menuItemService.getAllMenuItemsWithIngredients();
+        res.json(items);
+    } catch (error) {
+        res.status(500).json({ message: error instanceof Error ? error.message : 'Unknown error' });
+    }
+};
+
+/**
+ * Get a single menu item by ID with its full ingredient details
+ * Returns the menu item with nested ingredients array
+ */
+export const getMenuItemWithIngredientsById = async (req: Request, res: Response) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+
+        if (isNaN(id)) {
+            res.status(400).json({ message: 'Invalid menu item ID' });
+            return;
+        }
+
+        const item = await menuItemService.getMenuItemWithIngredientsById(id);
+
+        if (!item) {
+            res.status(404).json({ message: 'Menu item not found' });
+            return;
+        }
+
+        res.json(item);
+    } catch (error) {
+        res.status(500).json({ message: error instanceof Error ? error.message : 'Unknown error' });
+    }
+};
+
 export const createMenuItem = async (req: Request, res: Response) => {
     try {
         const newItemId = await menuItemService.createMenuItem(req.body);
