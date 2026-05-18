@@ -1,4 +1,4 @@
-// /var/www/RestAPI/src/app.ts
+// /var/www/RestAPI-dev/src/app.ts
 import dotenv from 'dotenv';
 import path from 'path';
 const envResult = dotenv.config({ path: path.join(__dirname, '../.env') });

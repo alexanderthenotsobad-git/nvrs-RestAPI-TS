@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3002",
+      "url": "http://localhost:3003",
       "description": "Development server"
     }
   ],
@@ -44,6 +44,88 @@
           "item_type": {
             "type": "string",
             "description": "Type/category of the menu item"
+          },
+          "dietary_tags": {
+            "type": "string",
+            "description": "Dietary tags (vegetarian, vegan, gluten-free, etc.)",
+            "nullable": true
+          },
+          "style": {
+            "type": "string",
+            "description": "Cuisine style (american, mexican, italian, etc.)",
+            "nullable": true
+          },
+          "rating": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Average rating of the menu item",
+            "nullable": true
+          },
+          "image_id": {
+            "type": "integer",
+            "description": "ID of the associated image",
+            "nullable": true
+          }
+        }
+      },
+      "IngredientDetail": {
+        "type": "object",
+        "properties": {
+          "ingredient_id": {
+            "type": "integer",
+            "description": "The unique identifier of the ingredient"
+          },
+          "ingredient_name": {
+            "type": "string",
+            "description": "Name of the ingredient"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "protein",
+              "vegetable",
+              "spice",
+              "dairy",
+              "grain",
+              "oil",
+              "other"
+            ],
+            "description": "Category of the ingredient",
+            "nullable": true
+          },
+          "is_allergen": {
+            "type": "boolean",
+            "description": "Whether this ingredient is a common allergen"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "decimal",
+            "description": "Quantity of the ingredient used",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit of measurement (g, ml, each, etc.)",
+            "nullable": true
+          },
+          "preparation_note": {
+            "type": "string",
+            "description": "How the ingredient is prepared (chopped, minced, shredded, etc.)",
+            "nullable": true
+          },
+          "is_optional": {
+            "type": "boolean",
+            "description": "Whether the ingredient can be omitted by request"
+          },
+          "spice_level": {
+            "type": "string",
+            "description": "Spice level for spicy ingredients (mild, medium, hot)",
+            "nullable": true
+          },
+          "custom_attributes": {
+            "type": "object",
+            "description": "Additional JSON attributes for ingredient-specific details",
+            "nullable": true
           }
         }
       }
@@ -333,6 +415,61 @@
         }
       }
     },
+    "/menu-item-ingredients": {
+      "post": {
+        "summary": "Import menu item ingredients (bridge table)",
+        "tags": [
+          "Import"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "menu_item_id": {
+                      "type": "integer"
+                    },
+                    "ingredient_name": {
+                      "type": "string"
+                    },
+                    "quantity": {
+                      "type": "number"
+                    },
+                    "unit": {
+                      "type": "string"
+                    },
+                    "preparation_note": {
+                      "type": "string"
+                    },
+                    "is_optional": {
+                      "type": "boolean"
+                    },
+                    "spice_level": {
+                      "type": "string"
+                    },
+                    "custom_attributes": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Menu item ingredients imported successfully"
+          },
+          "500": {
+            "description": "Failed to import menu item ingredients"
+          }
+        }
+      }
+    },
     "/api/images/menu-item/{menuItemId}": {
       "get": {
         "tags": [
@@ -608,13 +745,216 @@
         }
       }
     },
+    "/ingredients": {
+      "get": {
+        "summary": "Get all ingredients",
+        "tags": [
+          "Ingredients"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all ingredients",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Ingredient"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new ingredient",
+        "tags": [
+          "Ingredients"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "ingredient_name"
+                ],
+                "properties": {
+                  "ingredient_name": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "protein",
+                      "vegetable",
+                      "spice",
+                      "dairy",
+                      "grain",
+                      "oil",
+                      "other"
+                    ]
+                  },
+                  "is_allergen": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "unit_type": {
+                    "type": "string",
+                    "enum": [
+                      "weight",
+                      "volume",
+                      "count",
+                      "each"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ingredient created successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/ingredients/{id}": {
+      "get": {
+        "summary": "Get ingredient by ID",
+        "tags": [
+          "Ingredients"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Ingredient ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ingredient found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ingredient"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Ingredient not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an ingredient",
+        "tags": [
+          "Ingredients"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Ingredient ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ingredient_name": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "is_allergen": {
+                    "type": "boolean"
+                  },
+                  "unit_type": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ingredient updated successfully"
+          },
+          "404": {
+            "description": "Ingredient not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an ingredient",
+        "tags": [
+          "Ingredients"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Ingredient ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ingredient deleted successfully"
+          },
+          "404": {
+            "description": "Ingredient not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
     "/": {
       "get": {
         "tags": [
           "Menu Items"
         ],
         "summary": "Get all menu items",
-        "description": "Retrieves all menu items from the database",
+        "description": "Retrieves all menu items from the database (basic info only, no ingredients)",
         "responses": {
           "200": {
             "description": "A list of menu items",
@@ -628,6 +968,141 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/with-ingredients": {
+      "get": {
+        "tags": [
+          "Menu Items"
+        ],
+        "summary": "Get all menu items with ingredients",
+        "description": "Retrieves all menu items with their complete ingredient details nested inside",
+        "responses": {
+          "200": {
+            "description": "A list of menu items with ingredients",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "item_id": {
+                        "type": "integer"
+                      },
+                      "item_name": {
+                        "type": "string"
+                      },
+                      "item_desc": {
+                        "type": "string"
+                      },
+                      "price": {
+                        "type": "number"
+                      },
+                      "item_type": {
+                        "type": "string"
+                      },
+                      "dietary_tags": {
+                        "type": "string"
+                      },
+                      "style": {
+                        "type": "string"
+                      },
+                      "rating": {
+                        "type": "number"
+                      },
+                      "image_id": {
+                        "type": "integer"
+                      },
+                      "ingredients": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/IngredientDetail"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/{id}/with-ingredients": {
+      "get": {
+        "tags": [
+          "Menu Items"
+        ],
+        "summary": "Get a menu item by ID with its ingredients",
+        "description": "Retrieves a single menu item with its complete ingredient details nested inside",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Menu item ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Menu item with ingredients found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "item_id": {
+                      "type": "integer"
+                    },
+                    "item_name": {
+                      "type": "string"
+                    },
+                    "item_desc": {
+                      "type": "string"
+                    },
+                    "price": {
+                      "type": "number"
+                    },
+                    "item_type": {
+                      "type": "string"
+                    },
+                    "dietary_tags": {
+                      "type": "string"
+                    },
+                    "style": {
+                      "type": "string"
+                    },
+                    "rating": {
+                      "type": "number"
+                    },
+                    "image_id": {
+                      "type": "integer"
+                    },
+                    "ingredients": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/IngredientDetail"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Menu item not found"
           },
           "500": {
             "description": "Server error"
@@ -796,6 +1271,10 @@
     {
       "name": "Import",
       "description": "Bulk data import endpoints"
+    },
+    {
+      "name": "Ingredients",
+      "description": "Ingredient management endpoints"
     }
   ]
 }

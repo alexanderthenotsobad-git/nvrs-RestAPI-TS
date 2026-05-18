@@ -1,4 +1,4 @@
-// /var/www/RestAPI/src/config/swagger.ts
+// /var/www/RestAPI-dev/src/config/swagger.ts
 import swaggerJsdoc from 'swagger-jsdoc';
 
 const options = {
@@ -16,7 +16,7 @@ const options = {
             {
                 url: process.env.NODE_ENV === 'production'
                     ? 'https://api.alexanderthenotsobad.us'
-                    : 'http://localhost:3002',
+                    : 'http://localhost:3003',
                 description: process.env.NODE_ENV === 'production'
                     ? 'Production server'
                     : 'Development server'
