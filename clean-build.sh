@@ -6,7 +6,7 @@
 set -ex
 
 # Path to project directory - update if needed
-PROJECT_DIR="/var/www/RestAPI"
+PROJECT_DIR="/var/www/RestAPI-dev"
 
 # Change to project directory
 cd $PROJECT_DIR

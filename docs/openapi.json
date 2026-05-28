@@ -276,7 +276,7 @@
         }
       },
       "get": {
-        "summary": "Retrieve all normalized item nutritional data records",
+        "summary": "Retrieve all normalized item nutritional data records from menu_item_nutrition",
         "tags": [
           "Nutrition"
         ],

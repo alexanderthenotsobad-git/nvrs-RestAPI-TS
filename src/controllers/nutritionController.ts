@@ -6,7 +6,7 @@ import pool from '../config/db'; // Matches your local db.ts configuration setup
  * @openapi
  * /nutrition:
  *   get:
- *     summary: Retrieve all normalized item nutritional data records
+ *     summary: Retrieve all normalized item nutritional data records from menu_item_nutrition
  *     tags:
  *       - Nutrition
  *     responses:
@@ -37,7 +37,7 @@ export const getNutritionData = async (req: Request, res: Response): Promise<voi
     try {
         // Query your normalized on-premise MySQL container table
         const [rows] = await pool.query(
-            'SELECT item_id, calories, protein, fat, carbs FROM nutrition'
+            'SELECT item_id, calories, protein, fat, carbs FROM menu_item_nutrition'
         );
 
         res.status(200).json(rows);
