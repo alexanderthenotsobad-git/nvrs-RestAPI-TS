@@ -1,4 +1,4 @@
-// /var/www/RestAPI/src/services/ingredientService.ts
+// /var/www/RestAPI-dev/src/services/ingredientService.ts
 import { Pool, RowDataPacket, ResultSetHeader } from 'mysql2/promise';
 import pool from '../config/db';
 

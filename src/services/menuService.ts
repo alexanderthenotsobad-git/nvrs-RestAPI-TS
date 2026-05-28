@@ -1,4 +1,4 @@
-// /var/www/RestAPI/src/services/menuService.ts
+// /var/www/RestAPI-dev/src/services/menuService.ts
 import { Pool } from 'mysql2/promise';
 import pool from '../config/db';
 import { MenuItem } from '../models/menuItem';

@@ -1,6 +1,9 @@
-// src/controllers/nutritionController.ts
+// /var/wwww/RestAPI-dev// src/controllers/nutritionController.ts
 import { Request, Response } from 'express';
-import pool from '../config/db'; // Matches your local db.ts configuration setup
+import pool from '../config/db'; // Matches local db.ts configuration setup
+import { NutritionService } from '../services/nutritionService';
+
+const nutritionService = new NutritionService;
 
 /**
  * @openapi
@@ -35,11 +38,9 @@ import pool from '../config/db'; // Matches your local db.ts configuration setup
 
 export const getNutritionData = async (req: Request, res: Response): Promise<void> => {
     try {
-        // Query your normalized on-premise MySQL container table
         const [rows] = await pool.query(
             'SELECT item_id, calories, protein, fat, carbs FROM menu_item_nutrition'
         );
-
         res.status(200).json(rows);
     } catch (error) {
         console.error('Database execution error on GET /nutrition:', error);

@@ -1,4 +1,4 @@
-// /var/www/RestAPI/src/controllers/ingredientController.ts
+// /var/www/RestAPI-dev/src/controllers/ingredientController.ts
 import { Request, Response } from 'express';
 import { IngredientService } from '../services/ingredientService';
 

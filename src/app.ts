@@ -22,10 +22,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/', menuRoutes);
+app.use('/menu', menuRoutes);
 app.use('/import', dataImportRoutes);  // ← ADD THIS
 app.use('/api/images', imageRoutes);
-app.use('/', nutritionRoutes);
+app.use('/nutrition', nutritionRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(err.stack);
