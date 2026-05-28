@@ -12,6 +12,7 @@ import swaggerUi from 'swagger-ui-express';
 import { specs } from './config/swagger';
 import imageRoutes from './routes/imageRoutes';
 import ingredientRoutes from './routes/ingredientRoutes';
+import nutritionRoutes from './routes/nutritionRoutes';
 
 const app: Express = express();
 
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/', menuRoutes);
 app.use('/import', dataImportRoutes);  // ← ADD THIS
 app.use('/api/images', imageRoutes);
+app.use('/', nutritionRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(err.stack);

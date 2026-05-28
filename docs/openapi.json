@@ -274,6 +274,47 @@
             "description": "Failed to import nutrition data"
           }
         }
+      },
+      "get": {
+        "summary": "Retrieve all normalized item nutritional data records",
+        "tags": [
+          "Nutrition"
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON array containing exact item macro properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "item_id": {
+                        "type": "integer"
+                      },
+                      "calories": {
+                        "type": "integer"
+                      },
+                      "protein": {
+                        "type": "integer"
+                      },
+                      "fat": {
+                        "type": "integer"
+                      },
+                      "carbs": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database internal compilation or server tracking error."
+          }
+        }
       }
     },
     "/patrons": {
