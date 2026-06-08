@@ -13,6 +13,7 @@ import { specs } from './config/swagger';
 import imageRoutes from './routes/imageRoutes';
 import ingredientRoutes from './routes/ingredientRoutes';
 import nutritionRoutes from './routes/nutritionRoutes';
+import redirectRoutes from './routes/redirectRoutes';
 
 const app: Express = express();
 
@@ -21,6 +22,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/', redirectRoutes);
 
 app.use('/menu', menuRoutes);
 app.use('/import', dataImportRoutes);  // ← ADD THIS
