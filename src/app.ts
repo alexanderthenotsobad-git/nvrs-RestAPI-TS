@@ -6,7 +6,7 @@ const envResult = dotenv.config({ path: path.join(__dirname, '../.env') });
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import menuRoutes from './routes/menuRoutes';
-import dataImportRoutes from './routes/dataImportRoutes';  // ← ADD THIS
+import dataImportRoutes from './routes/dataImportRoutes';
 import { connectToDatabase } from './config/db';
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './config/swagger';
@@ -14,31 +14,45 @@ import imageRoutes from './routes/imageRoutes';
 import ingredientRoutes from './routes/ingredientRoutes';
 import nutritionRoutes from './routes/nutritionRoutes';
 import redirectRoutes from './routes/redirectRoutes';
+import paymentRoutes, { webhookRouter } from './routes/paymentRoutes';
 
 const app: Express = express();
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use('/', redirectRoutes);
 
+// Webhook route - raw body (no JSON parsing)
+app.use('/api', webhookRouter);
+
+// JSON parser for all other routes
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Regular payment routes (now have JSON body)
+app.use('/api', paymentRoutes);
+
+// All other routes
+app.use('/', redirectRoutes);
 app.use('/menu', menuRoutes);
-app.use('/import', dataImportRoutes);  // ← ADD THIS
+app.use('/import', dataImportRoutes);
 app.use('/api/images', imageRoutes);
 app.use('/nutrition', nutritionRoutes);
+app.use('/ingredients', ingredientRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
 });
 
-app.use('/ingredients', ingredientRoutes);
-
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3003;
 
 if (require.main === module) {
+    console.log("DB Check:", {
+        host: process.env.MYSQL_HOST,
+        user: process.env.MYSQL_USER,
+        db: process.env.MYSQL_DATABASE_NAME,
+        port: process.env.MYSQL_PORT
+    });
     connectToDatabase()
         .then(() => {
             app.listen(PORT, () => {
@@ -50,5 +64,3 @@ if (require.main === module) {
             process.exit(1);
         });
 }
-
-export default app;
