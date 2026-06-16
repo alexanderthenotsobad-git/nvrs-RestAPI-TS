@@ -1,4 +1,5 @@
 // /var/www/RestAPI-dev/src/app.ts
+
 import dotenv from 'dotenv';
 import path from 'path';
 const envResult = dotenv.config({ path: path.join(__dirname, '../.env') });
@@ -15,30 +16,38 @@ import ingredientRoutes from './routes/ingredientRoutes';
 import nutritionRoutes from './routes/nutritionRoutes';
 import redirectRoutes from './routes/redirectRoutes';
 import paymentRoutes, { webhookRouter } from './routes/paymentRoutes';
+import patronRoutes from './routes/patronRoutes';
 
 const app: Express = express();
 
+// Swagger documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+// CORS
 app.use(cors());
 
-// Webhook route - raw body (no JSON parsing)
+// Webhook route - MUST be before express.json() (raw body required)
 app.use('/api', webhookRouter);
 
 // JSON parser for all other routes
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Regular payment routes (now have JSON body)
+// API routes
 app.use('/api', paymentRoutes);
+app.use('/api', patronRoutes);
 
-// All other routes
+// Redirect routes
 app.use('/', redirectRoutes);
+
+// Menu and related routes
 app.use('/menu', menuRoutes);
 app.use('/import', dataImportRoutes);
 app.use('/api/images', imageRoutes);
 app.use('/nutrition', nutritionRoutes);
 app.use('/ingredients', ingredientRoutes);
 
+// Error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
