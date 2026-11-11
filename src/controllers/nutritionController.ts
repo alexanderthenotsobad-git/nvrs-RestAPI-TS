@@ -6,34 +6,34 @@ import { NutritionService } from '../services/nutritionService';
 const nutritionService = new NutritionService;
 
 /**
- * @openapi
+ * @swagger
+ * tags:
+ *   name: Nutrition
+ *   description: Per-item macro data
+ */
+
+/**
+ * @swagger
  * /nutrition:
  *   get:
- *     summary: Retrieve all normalized item nutritional data records from menu_item_nutrition
  *     tags:
  *       - Nutrition
+ *     summary: Retrieve all item nutrition records
+ *     description: >
+ *       Returns every row of menu_item_nutrition. Macro values (protein, fat,
+ *       carbs) are MySQL DECIMALs and therefore arrive as JSON strings; only
+ *       calories is numeric. Join to /menu by item_id.
  *     responses:
  *       200:
- *         description: A JSON array containing exact item macro properties.
+ *         description: A JSON array of macro rows
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   item_id:
- *                     type: integer
- *                   calories:
- *                     type: integer
- *                   protein:
- *                     type: integer
- *                   fat:
- *                     type: integer
- *                   carbs:
- *                     type: integer
+ *                 $ref: '#/components/schemas/Nutrition'
  *       500:
- *         description: Database internal compilation or server tracking error.
+ *         description: Database or server error
  */
 
 export const getNutritionData = async (req: Request, res: Response): Promise<void> => {

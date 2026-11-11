@@ -6,14 +6,18 @@
     "description": "API documentation for Node Virtual Restaurant Solutions",
     "contact": {
       "name": "Alexander Gomez"
+    },
+    "license": {
+      "name": "ISC"
     }
   },
   "servers": [
     {
-      "url": "http://localhost:3003",
-      "description": "Development server"
+      "url": "https://ai.alexanderthenotsobad.us",
+      "description": "Public NVRS API (Apache → localhost:3003)"
     }
   ],
+  "security": [],
   "components": {
     "schemas": {
       "MenuItem": {
@@ -37,9 +41,9 @@
             "description": "Description of the menu item"
           },
           "price": {
-            "type": "number",
-            "format": "decimal",
-            "description": "Price of the menu item"
+            "type": "string",
+            "description": "Price as a JSON string (MySQL DECIMAL). Parse with parseFloat before doing arithmetic. Example: \"8.00\".",
+            "example": "8.00"
           },
           "item_type": {
             "type": "string",
@@ -47,7 +51,7 @@
           },
           "dietary_tags": {
             "type": "string",
-            "description": "Dietary tags (vegetarian, vegan, gluten-free, etc.)",
+            "description": "Dietary tags, comma-separated when there is more than one (e.g. \"vegan, gluten-free\")",
             "nullable": true
           },
           "style": {
@@ -56,10 +60,10 @@
             "nullable": true
           },
           "rating": {
-            "type": "number",
-            "format": "decimal",
-            "description": "Average rating of the menu item",
-            "nullable": true
+            "type": "string",
+            "description": "Average rating as a JSON string (MySQL DECIMAL). Example: \"4.5\".",
+            "nullable": true,
+            "example": "4.5"
           },
           "image_id": {
             "type": "integer",
@@ -68,8 +72,28 @@
           }
         }
       },
+      "MenuItemWithIngredients": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/MenuItem"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "ingredients": {
+                "type": "array",
+                "description": "Ingredients for this menu item, ordered by name",
+                "items": {
+                  "$ref": "#/components/schemas/IngredientDetail"
+                }
+              }
+            }
+          }
+        ]
+      },
       "IngredientDetail": {
         "type": "object",
+        "description": "One ingredient as prepared within a menu item (rows from menu_item_ingredients joined to ingredients).",
         "properties": {
           "ingredient_id": {
             "type": "integer",
@@ -95,13 +119,13 @@
           },
           "is_allergen": {
             "type": "boolean",
-            "description": "Whether this ingredient is a common allergen"
+            "description": "Whether this ingredient is a common allergen. Boolean on this endpoint; /ingredients returns 0/1."
           },
           "quantity": {
-            "type": "number",
-            "format": "decimal",
-            "description": "Quantity of the ingredient used",
-            "nullable": true
+            "type": "string",
+            "description": "Quantity used, as a JSON string (MySQL DECIMAL). Example: \"50.00\".",
+            "nullable": true,
+            "example": "50.00"
           },
           "unit": {
             "type": "string",
@@ -128,11 +152,111 @@
             "nullable": true
           }
         }
+      },
+      "Ingredient": {
+        "type": "object",
+        "description": "A row of the ingredient master list (the `ingredients` table).",
+        "properties": {
+          "ingredient_id": {
+            "type": "integer",
+            "description": "The unique identifier of the ingredient"
+          },
+          "ingredient_name": {
+            "type": "string",
+            "description": "Name of the ingredient"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "protein",
+              "vegetable",
+              "spice",
+              "dairy",
+              "grain",
+              "oil",
+              "other"
+            ],
+            "nullable": true
+          },
+          "is_allergen": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ],
+            "description": "Whether this ingredient is a common allergen. Returned as 0/1 by this endpoint, unlike /menu/with-ingredients which returns a boolean."
+          },
+          "unit_type": {
+            "type": "string",
+            "description": "Default unit family for this ingredient, e.g. \"weight\" or \"volume\"",
+            "nullable": true
+          }
+        }
+      },
+      "Nutrition": {
+        "type": "object",
+        "description": "Per-menu-item macros (row of menu_item_nutrition).",
+        "properties": {
+          "item_id": {
+            "type": "integer",
+            "description": "Menu item this nutrition row belongs to"
+          },
+          "calories": {
+            "type": "integer",
+            "description": "Calories (integer)"
+          },
+          "protein": {
+            "type": "string",
+            "description": "Grams of protein as a JSON string (MySQL DECIMAL). Example: \"14.5\".",
+            "example": "14.5"
+          },
+          "fat": {
+            "type": "string",
+            "description": "Grams of fat as a JSON string (MySQL DECIMAL). Example: \"24.0\".",
+            "example": "24.0"
+          },
+          "carbs": {
+            "type": "string",
+            "description": "Grams of carbohydrates as a JSON string (MySQL DECIMAL). Example: \"48.0\".",
+            "example": "48.0"
+          }
+        }
+      },
+      "Patron": {
+        "type": "object",
+        "properties": {
+          "patron_id": {
+            "type": "integer",
+            "description": "Patron identifier"
+          },
+          "patron_name": {
+            "type": "string",
+            "description": "Display name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Patron email address"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "description": "Error envelope used across the API.",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Human-readable error message"
+          }
+        }
       }
     }
   },
   "paths": {
-    "/menu-items": {
+    "/import/menu-items": {
       "post": {
         "summary": "Import multiple menu items",
         "tags": [
@@ -187,7 +311,7 @@
         }
       }
     },
-    "/beverages": {
+    "/import/beverages": {
       "post": {
         "summary": "Import multiple beverages",
         "tags": [
@@ -230,7 +354,7 @@
         }
       }
     },
-    "/nutrition": {
+    "/import/nutrition": {
       "post": {
         "summary": "Import nutrition data for menu items",
         "tags": [
@@ -274,50 +398,9 @@
             "description": "Failed to import nutrition data"
           }
         }
-      },
-      "get": {
-        "summary": "Retrieve all normalized item nutritional data records from menu_item_nutrition",
-        "tags": [
-          "Nutrition"
-        ],
-        "responses": {
-          "200": {
-            "description": "A JSON array containing exact item macro properties.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "item_id": {
-                        "type": "integer"
-                      },
-                      "calories": {
-                        "type": "integer"
-                      },
-                      "protein": {
-                        "type": "integer"
-                      },
-                      "fat": {
-                        "type": "integer"
-                      },
-                      "carbs": {
-                        "type": "integer"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Database internal compilation or server tracking error."
-          }
-        }
       }
     },
-    "/patrons": {
+    "/import/patrons": {
       "post": {
         "summary": "Import multiple patrons",
         "tags": [
@@ -357,7 +440,7 @@
         }
       }
     },
-    "/orders": {
+    "/import/orders": {
       "post": {
         "summary": "Import multiple orders",
         "tags": [
@@ -411,7 +494,7 @@
         }
       }
     },
-    "/beverage-pairs": {
+    "/import/beverage-pairs": {
       "post": {
         "summary": "Import menu item beverage pairings",
         "tags": [
@@ -456,7 +539,7 @@
         }
       }
     },
-    "/menu-item-ingredients": {
+    "/import/menu-item-ingredients": {
       "post": {
         "summary": "Import menu item ingredients (bridge table)",
         "tags": [
@@ -989,7 +1072,7 @@
         }
       }
     },
-    "/": {
+    "/menu": {
       "get": {
         "tags": [
           "Menu Items"
@@ -1016,13 +1099,13 @@
         }
       }
     },
-    "/with-ingredients": {
+    "/menu/with-ingredients": {
       "get": {
         "tags": [
           "Menu Items"
         ],
         "summary": "Get all menu items with ingredients",
-        "description": "Retrieves all menu items with their complete ingredient details nested inside",
+        "description": "Retrieves all menu items with their complete ingredient details nested inside. This is the endpoint the AI consultant consumes for allergen- and macro-aware recommendations.\n",
         "responses": {
           "200": {
             "description": "A list of menu items with ingredients",
@@ -1031,42 +1114,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "item_id": {
-                        "type": "integer"
-                      },
-                      "item_name": {
-                        "type": "string"
-                      },
-                      "item_desc": {
-                        "type": "string"
-                      },
-                      "price": {
-                        "type": "number"
-                      },
-                      "item_type": {
-                        "type": "string"
-                      },
-                      "dietary_tags": {
-                        "type": "string"
-                      },
-                      "style": {
-                        "type": "string"
-                      },
-                      "rating": {
-                        "type": "number"
-                      },
-                      "image_id": {
-                        "type": "integer"
-                      },
-                      "ingredients": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/IngredientDetail"
-                        }
-                      }
-                    }
+                    "$ref": "#/components/schemas/MenuItemWithIngredients"
                   }
                 }
               }
@@ -1078,7 +1126,7 @@
         }
       }
     },
-    "/{id}/with-ingredients": {
+    "/menu/{id}/with-ingredients": {
       "get": {
         "tags": [
           "Menu Items"
@@ -1102,42 +1150,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "item_id": {
-                      "type": "integer"
-                    },
-                    "item_name": {
-                      "type": "string"
-                    },
-                    "item_desc": {
-                      "type": "string"
-                    },
-                    "price": {
-                      "type": "number"
-                    },
-                    "item_type": {
-                      "type": "string"
-                    },
-                    "dietary_tags": {
-                      "type": "string"
-                    },
-                    "style": {
-                      "type": "string"
-                    },
-                    "rating": {
-                      "type": "number"
-                    },
-                    "image_id": {
-                      "type": "integer"
-                    },
-                    "ingredients": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/IngredientDetail"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/MenuItemWithIngredients"
                 }
               }
             }
@@ -1151,7 +1164,7 @@
         }
       }
     },
-    "/createMenuItem": {
+    "/menu/createMenuItem": {
       "post": {
         "tags": [
           "Menu Items"
@@ -1163,7 +1176,40 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MenuItem"
+                "type": "object",
+                "required": [
+                  "item_name",
+                  "price",
+                  "item_type"
+                ],
+                "properties": {
+                  "item_name": {
+                    "type": "string"
+                  },
+                  "item_desc": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number",
+                    "description": "Price in USD"
+                  },
+                  "item_type": {
+                    "type": "string"
+                  },
+                  "dietary_tags": {
+                    "type": "string",
+                    "description": "Comma-separated when more than one, e.g. \"vegan, gluten-free\""
+                  },
+                  "style": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "image_id": {
+                    "type": "integer"
+                  }
+                }
               }
             }
           }
@@ -1223,7 +1269,6 @@
                   },
                   "price": {
                     "type": "number",
-                    "format": "decimal",
                     "description": "Price of the menu item"
                   },
                   "item_type": {
@@ -1296,13 +1341,584 @@
         ],
         "responses": {
           "200": {
-            "description": "Menu item deleted successfully"
+            "description": "Menu item deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "404": {
             "description": "Menu item not found"
           },
           "500": {
             "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/patrons": {
+      "get": {
+        "tags": [
+          "Patrons"
+        ],
+        "summary": "List all patrons",
+        "description": "Returns every patron without password fields.",
+        "responses": {
+          "200": {
+            "description": "A list of patrons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Patron"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to fetch patrons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/patrons/{id}": {
+      "get": {
+        "tags": [
+          "Patrons"
+        ],
+        "summary": "Get a single patron by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Patron ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The patron",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Patron"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Patron not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to fetch patron",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Patrons"
+        ],
+        "summary": "Authenticate a patron",
+        "description": "Returns the patron record on success. No token is issued: the session is identified by patron_id thereafter, and no endpoint currently requires an Authorization header.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "patron": {
+                      "$ref": "#/components/schemas/Patron"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email and password required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Login failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notify-service": {
+      "post": {
+        "tags": [
+          "Patrons"
+        ],
+        "summary": "Request table service (\"ring the bell\")",
+        "description": "Validates that the patron exists, then logs a service notification. The staff-facing delivery mechanism is not implemented yet; the call currently succeeds without notifying anyone.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "patron_id"
+                ],
+                "properties": {
+                  "patron_id": {
+                    "type": "integer"
+                  },
+                  "table_id": {
+                    "type": "integer",
+                    "description": "Optional table number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Notification accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Service notified"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "patron_id is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Patron not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to notify service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/create-payment-intent": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Create a Stripe PaymentIntent for a cart",
+        "description": "Recalculates the total from the database, rejects the request if the client-supplied amount differs by more than one cent, creates the PaymentIntent, then writes the order and its line items.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "items",
+                  "patron_id",
+                  "amount"
+                ],
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "item_id",
+                        "quantity"
+                      ],
+                      "properties": {
+                        "item_id": {
+                          "type": "integer"
+                        },
+                        "quantity": {
+                          "type": "integer",
+                          "minimum": 1
+                        }
+                      }
+                    }
+                  },
+                  "patron_id": {
+                    "type": "integer"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "description": "Client-calculated total in USD; must match the server total within $0.01"
+                  }
+                }
+              },
+              "example": {
+                "items": [
+                  {
+                    "item_id": 55,
+                    "quantity": 2
+                  }
+                ],
+                "patron_id": 12,
+                "amount": 16
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PaymentIntent created and order recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "clientSecret": {
+                      "type": "string",
+                      "description": "Stripe client secret used by Stripe.js to confirm payment"
+                    },
+                    "orderId": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing items, patron_id, or a valid amount",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A cart item does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Client amount does not match the server-calculated total",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Amount mismatch"
+                    },
+                    "frontend_amount": {
+                      "type": "number"
+                    },
+                    "backend_amount": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stripe or database failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/payment-details/{paymentIntentId}": {
+      "get": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Get payment status for an order",
+        "description": "Looks up the PaymentIntent at Stripe and joins the local order row.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "paymentIntentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Stripe PaymentIntent ID, e.g. pi_3N..."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "stripe_status": {
+                      "type": "string",
+                      "example": "succeeded"
+                    },
+                    "local_status": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "paid"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "description": "Amount in USD (Stripe cents divided by 100)"
+                    },
+                    "currency": {
+                      "type": "string",
+                      "example": "usd"
+                    },
+                    "order_id": {
+                      "type": "integer",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Payment intent ID is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stripe lookup or database failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/webhook": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Stripe webhook receiver",
+        "description": "Mounted before express.json() so the raw body survives signature verification. Updates orders on payment_intent.succeeded, payment_intent.payment_failed, and similar events. Configure this URL in the Stripe dashboard; callers are Stripe, not clients.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Raw Stripe event object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Event received and processed (or ignored)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "received": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Signature verification or event handling failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/app": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Redirect to the NVRS web app",
+        "description": "302 redirect to the currently deployed frontend on Cloud Run. The target is the dev Cloud Run service; update it when production is promoted.\n",
+        "responses": {
+          "302": {
+            "description": "Redirect to the frontend",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Frontend URL"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nutrition": {
+      "get": {
+        "tags": [
+          "Nutrition"
+        ],
+        "summary": "Retrieve all item nutrition records",
+        "description": "Returns every row of menu_item_nutrition. Macro values (protein, fat, carbs) are MySQL DECIMALs and therefore arrive as JSON strings; only calories is numeric. Join to /menu by item_id.\n",
+        "responses": {
+          "200": {
+            "description": "A JSON array of macro rows",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Nutrition"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database or server error"
           }
         }
       }
@@ -1316,6 +1932,26 @@
     {
       "name": "Ingredients",
       "description": "Ingredient management endpoints"
+    },
+    {
+      "name": "Menu Items",
+      "description": "Menu item endpoints"
+    },
+    {
+      "name": "Patrons",
+      "description": "Patron accounts, login, and table service requests"
+    },
+    {
+      "name": "Payments",
+      "description": "Stripe payment intents and order settlement"
+    },
+    {
+      "name": "System",
+      "description": "Non-data routes (frontend entrypoint, docs)"
+    },
+    {
+      "name": "Nutrition",
+      "description": "Per-item macro data"
     }
   ]
 }

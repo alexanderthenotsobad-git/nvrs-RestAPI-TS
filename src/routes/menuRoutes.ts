@@ -1,4 +1,4 @@
-// /var/www/RestAPI-devsrc/routes/menuRoutes.ts
+// /var/www/RestAPI-dev/src/routes/menuRoutes.ts
 import express from 'express';
 import { Router } from 'express';
 import {
@@ -14,7 +14,14 @@ const router = Router();
 
 /**
  * @swagger
- * /:
+ * tags:
+ *   name: Menu Items
+ *   description: Menu item endpoints
+ */
+
+/**
+ * @swagger
+ * /menu:
  *   get:
  *     tags:
  *       - Menu Items
@@ -36,12 +43,15 @@ router.get('/', getAllMenuItems);
 
 /**
  * @swagger
- * /with-ingredients:
+ * /menu/with-ingredients:
  *   get:
  *     tags:
  *       - Menu Items
  *     summary: Get all menu items with ingredients
- *     description: Retrieves all menu items with their complete ingredient details nested inside
+ *     description: >
+ *       Retrieves all menu items with their complete ingredient details nested inside.
+ *       This is the endpoint the AI consultant consumes for allergen- and macro-aware
+ *       recommendations.
  *     responses:
  *       200:
  *         description: A list of menu items with ingredients
@@ -50,30 +60,7 @@ router.get('/', getAllMenuItems);
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   item_id:
- *                     type: integer
- *                   item_name:
- *                     type: string
- *                   item_desc:
- *                     type: string
- *                   price:
- *                     type: number
- *                   item_type:
- *                     type: string
- *                   dietary_tags:
- *                     type: string
- *                   style:
- *                     type: string
- *                   rating:
- *                     type: number
- *                   image_id:
- *                     type: integer
- *                   ingredients:
- *                     type: array
- *                     items:
- *                       $ref: '#/components/schemas/IngredientDetail'
+ *                 $ref: '#/components/schemas/MenuItemWithIngredients'
  *       500:
  *         description: Server error
  */
@@ -81,7 +68,7 @@ router.get('/with-ingredients', getAllMenuItemsWithIngredients);
 
 /**
  * @swagger
- * /{id}/with-ingredients:
+ * /menu/{id}/with-ingredients:
  *   get:
  *     tags:
  *       - Menu Items
@@ -100,30 +87,7 @@ router.get('/with-ingredients', getAllMenuItemsWithIngredients);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 item_id:
- *                   type: integer
- *                 item_name:
- *                   type: string
- *                 item_desc:
- *                   type: string
- *                 price:
- *                   type: number
- *                 item_type:
- *                   type: string
- *                 dietary_tags:
- *                   type: string
- *                 style:
- *                   type: string
- *                 rating:
- *                   type: number
- *                 image_id:
- *                   type: integer
- *                 ingredients:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/IngredientDetail'
+ *               $ref: '#/components/schemas/MenuItemWithIngredients'
  *       404:
  *         description: Menu item not found
  *       500:
@@ -133,7 +97,7 @@ router.get('/:id/with-ingredients', getMenuItemWithIngredientsById);
 
 /**
  * @swagger
- * /createMenuItem:
+ * /menu/createMenuItem:
  *   post:
  *     tags:
  *       - Menu Items
@@ -144,7 +108,27 @@ router.get('/:id/with-ingredients', getMenuItemWithIngredientsById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/MenuItem'
+ *             type: object
+ *             required: [item_name, price, item_type]
+ *             properties:
+ *               item_name:
+ *                 type: string
+ *               item_desc:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *                 description: Price in USD
+ *               item_type:
+ *                 type: string
+ *               dietary_tags:
+ *                 type: string
+ *                 description: Comma-separated when more than one, e.g. "vegan, gluten-free"
+ *               style:
+ *                 type: string
+ *               rating:
+ *                 type: number
+ *               image_id:
+ *                 type: integer
  *     responses:
  *       201:
  *         description: Menu item created successfully
@@ -189,7 +173,6 @@ router.post('/createMenuItem', createMenuItem);
  *                 description: Description of the menu item
  *               price:
  *                 type: number
- *                 format: decimal
  *                 description: Price of the menu item
  *               item_type:
  *                 type: string
@@ -223,7 +206,7 @@ router.post('/createMenuItem', createMenuItem);
  *       500:
  *         description: Server error
  */
-router.put('/menu/:id', updateMenuItem);
+router.put('/:id', updateMenuItem);
 
 /**
  * @swagger
@@ -243,11 +226,15 @@ router.put('/menu/:id', updateMenuItem);
  *     responses:
  *       200:
  *         description: Menu item deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       404:
  *         description: Menu item not found
  *       500:
  *         description: Server error
  */
-router.delete('/menu/:id', deleteMenuItem);
+router.delete('/:id', deleteMenuItem);
 
 export default router;

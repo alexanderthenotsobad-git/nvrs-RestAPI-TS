@@ -20,7 +20,7 @@ const router = Router();
 
 /**
  * @swagger
- * /menu-items:
+ * /import/menu-items:
  *   post:
  *     summary: Import multiple menu items
  *     tags: [Import]
@@ -59,7 +59,7 @@ router.post('/menu-items', importMenuItems);
 
 /**
  * @swagger
- * /beverages:
+ * /import/beverages:
  *   post:
  *     summary: Import multiple beverages
  *     tags: [Import]
@@ -90,7 +90,7 @@ router.post('/beverages', importBeverages);
 
 /**
  * @swagger
- * /nutrition:
+ * /import/nutrition:
  *   post:
  *     summary: Import nutrition data for menu items
  *     tags: [Import]
@@ -123,7 +123,7 @@ router.post('/nutrition', importNutrition);
 
 /**
  * @swagger
- * /patrons:
+ * /import/patrons:
  *   post:
  *     summary: Import multiple patrons
  *     tags: [Import]
@@ -152,7 +152,7 @@ router.post('/patrons', importPatrons);
 
 /**
  * @swagger
- * /orders:
+ * /import/orders:
  *   post:
  *     summary: Import multiple orders
  *     tags: [Import]
@@ -190,7 +190,7 @@ router.post('/orders', importOrders);
 
 /**
  * @swagger
- * /beverage-pairs:
+ * /import/beverage-pairs:
  *   post:
  *     summary: Import menu item beverage pairings
  *     tags: [Import]
@@ -220,7 +220,7 @@ router.post('/beverage-pairs', importMenuBeveragePairs);
 
 /**
  * @swagger
- * /menu-item-ingredients:
+ * /import/menu-item-ingredients:
  *   post:
  *     summary: Import menu item ingredients (bridge table)
  *     tags: [Import]
