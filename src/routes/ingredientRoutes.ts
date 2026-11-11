@@ -1,4 +1,4 @@
-// /var/www/RestAPI/src/routes/ingredientRoutes.ts
+// /var/www/RestAPI-devsrc/routes/ingredientRoutes.ts
 import { Router } from 'express';
 import {
     getAllIngredients,

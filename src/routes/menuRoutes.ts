@@ -1,4 +1,4 @@
-// /var/www/RestAPI/src/routes/menuRoutes.ts
+// /var/www/RestAPI-devsrc/routes/menuRoutes.ts
 import express from 'express';
 import { Router } from 'express';
 import {

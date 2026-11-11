@@ -1,4 +1,4 @@
-// /var/www/RestAPI/src/controllers/imageController.ts
+// /var/www/RestAPI-devsrc/controllers/imageController.ts
 import { Request, Response } from 'express';
 import { MenuItemService } from '../services/menuService';
 import fs from 'fs';

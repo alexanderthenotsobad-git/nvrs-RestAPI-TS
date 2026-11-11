@@ -1,4 +1,4 @@
-// /var/www/RestAPI/src/models/menuItems.ts
+// /var/www/RestAPI-devsrc/models/menuItems.ts
 // This is NVRS-TS model definition for the backend
 export interface MenuItem {
     item_id: number;
